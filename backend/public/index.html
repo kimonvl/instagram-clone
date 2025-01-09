@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Test</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form action="http://localhost:8000/api/v1/user/register" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="email">email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="password">password:</label>
+        <input type="text" id="password" name="password" required><br><br>
+        <button type="submit">Register</button>
+    </form>
+<hr/>
+    <h1>Login</h1>
+    <form action="http://localhost:8000/api/v1/user/login" method="post">
+        <label for="email">email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="password">password:</label>
+        <input type="text" id="password" name="password" required><br><br>
+        <button type="submit">Login</button>
+    </form>
+<hr/>
+    <h1>Logout</h1>
+    <form action="http://localhost:8000/api/v1/user/logout" method="get">
+        <button type="submit">Logout</button>
+    </form>
+<hr/>
+    <h1>Get Profile</h1>
+    <form action="http://localhost:8000/api/v1/user/677b10e2b72a7e57f79aa36b/profile" method="get">
+        <button type="submit">Get Profile</button>
+    </form>
+<hr/>
+    <h1>Edit profile</h1>
+    <form action="http://localhost:8000/api/v1/user/profile/edit" method="post" enctype="multipart/form-data">
+        <label for="bio">Bio:</label>
+        <input type="text" id="bio" name="bio" required><br><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select><br><br>
+
+        <label for="profilePhoto">Profile Picture:</label>
+        <input type="file" id="profilePhoto" name="profilePhoto" required><br><br>
+
+        <button type="submit">Upload</button>
+    </form>
+<hr/>
+    <h1>Get Suggested users</h1>
+    <form action="http://localhost:8000/api/v1/user/suggested" method="get">
+        <button type="submit">Get Suggested</button>
+    </form>
+<hr/>
+    <h1>Follow or Unfollow</h1>
+    <form action="http://localhost:8000/api/v1/user/followorunfollow/677b10e2b72a7e57f79aa36b" method="post">
+        <button type="submit">Follow or Unfollow</button>
+    </form>
+<hr/>
+    <h1>Add new post</h1>
+    <form action="http://localhost:8000/api/v1/post/addnewpost" method="post" enctype="multipart/form-data">
+        <label for="caption">caption:</label>
+        <input type="text" id="caption" name="caption" required><br><br>
+
+        <label for="image">Profile Picture:</label>
+        <input type="file" id="image" name="image" required><br><br>
+
+        <button type="submit">Add new post</button>
+    </form>
+<hr/>
+    <h1>Get all posts</h1>
+    <form action="http://localhost:8000/api/v1/post/getallposts" method="post">
+        <button type="submit">Get all posts</button>
+    </form>
+<hr/>
+    <h1>Get User Posts</h1>
+    <form action="http://localhost:8000/api/v1/post/getuserposts" method="post">
+        <button type="submit">Get User posts</button>
+    </form>
+<hr/>
+    <h1>Get Full Post</h1>
+    <form action="http://localhost:8000/api/v1/post/getfullpost/677fe447776182e348bd4a1f" method="post">
+        <button type="submit">Get Full post</button>
+    </form>
+<hr/>
+    <h1>Delete Post</h1>
+    <form action="http://localhost:8000/api/v1/post/deletepost/677fe447776182e348bd4a1f" method="post">
+        <button type="submit">Delete Post</button>
+    </form>
+<hr/>
+    <h1>Edit Post</h1>
+    <form action="http://localhost:8000/api/v1/post/editpost/677fe447776182e348bd4a1f" method="post" enctype="multipart/form-data">
+        <label for="caption">caption:</label>
+        <input type="text" id="caption" name="caption" required><br><br>
+        <label for="image">Post Picture:</label>
+        <input type="file" id="image" name="image" required><br><br>
+        <button type="submit">Edit Post</button>
+    </form>
+<hr/>
+    <h1>Create Comment</h1>
+    <form action="http://localhost:8000/api/v1/post/createcomment/677fe447776182e348bd4a1f" method="post">
+        <label for="text">text:</label>
+        <input type="text" id="text" name="text" required><br><br>
+        <button type="submit">Create Comment</button>
+    </form>
+<hr/>
+    <h1>Delete Comment</h1>
+    <form action="http://localhost:8000/api/v1/post/deletecomment/677fddc1b8d589d9a307e878" method="post">
+        <button type="submit">Delete Comment</button>
+    </form>
+<hr/>
+    <h1>Edit Comment</h1>
+    <form action="http://localhost:8000/api/v1/post/editcomment/677fddc1b8d589d9a307e878" method="post">
+        <label for="text">text:</label>
+        <input type="text" id="text" name="text" required><br><br>
+        <button type="submit">Edit Comment</button>
+    </form>
+<hr/>
+    <h1>Like Post</h1>
+    <form action="http://localhost:8000/api/v1/post/likepost/677fe447776182e348bd4a1f" method="post">
+        <button type="submit">Like Post</button>
+    </form>
+<hr/>
+    <h1>Dislike Post</h1>
+    <form action="http://localhost:8000/api/v1/post/dislikepost/677fe447776182e348bd4a1f" method="post">
+        <button type="submit">Dislike Post</button>
+    </form>
+
+</body>
+</html>

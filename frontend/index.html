@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Test</title>
+</head>
+<body>
+    <h1>File Upload Test</h1>
+    <form action="http://localhost:8000/api/v1/user/profile/edit" method="post" enctype="multipart/form-data">
+        <label for="bio">Bio:</label>
+        <input type="text" id="bio" name="bio" required><br><br>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select><br><br>
+
+        <label for="profilePhoto">Profile Picture:</label>
+        <input type="file" id="profilePhoto" name="profilePhoto" required><br><br>
+
+        <button type="submit">Upload</button>
+    </form>
+
+    <h1>Register</h1>
+    <form action="http://localhost:8000/api/v1/user/register" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="email">email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="password">password:</label>
+        <input type="text" id="password" name="password" required><br><br>
+        <button type="submit">Register</button>
+    </form>
+
+    <h1>Login</h1>
+    <form action="http://localhost:8000/api/v1/user/login" method="post">
+        <label for="email">email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="password">password:</label>
+        <input type="text" id="password" name="password" required><br><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
