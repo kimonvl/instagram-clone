@@ -1,7 +1,7 @@
 import express from "express";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import upload from "../middlewares/multer.js"
-import { addNewPost, createComment, deleteComment, deletePost, dislikePost, editComment, editPost, getAllPosts, getFullPost, getUserPosts, likePost } from "../controllers/post.controller.js";
+import { addNewPost, bookmarkPost, createComment, deleteComment, deletePost, dislikePost, editComment, editPost, getAllPosts, getFullPost, getUserPosts, likePost } from "../controllers/post.controller.js";
 
 const postRouter = express.Router();
 
@@ -16,5 +16,6 @@ postRouter.route('/deletecomment/:id').post(isAuthenticated, deleteComment);
 postRouter.route('/editcomment/:id').post(isAuthenticated, editComment);
 postRouter.route('/likepost/:id').post(isAuthenticated, likePost);
 postRouter.route('/dislikepost/:id').post(isAuthenticated, dislikePost);
+postRouter.route('/bookmarkpost/:id').post(isAuthenticated, bookmarkPost);
 
 export default postRouter;

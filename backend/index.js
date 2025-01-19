@@ -25,6 +25,7 @@ app.use(cors(corsOptions));
 // 1) Serve static files from "public" folder
 //    __dirname might not be defined if you're using ES modules, so adjust accordingly:
 import { fileURLToPath } from "url";
+import messageRouter from "./routes/message.router.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/post", postRouter);
+app.use("/api/v1/message", messageRouter);
 
 app.listen(PORT, () => {
     connectDB();

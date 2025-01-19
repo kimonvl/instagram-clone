@@ -131,6 +131,23 @@
     <form action="http://localhost:8000/api/v1/post/dislikepost/677fe447776182e348bd4a1f" method="post">
         <button type="submit">Dislike Post</button>
     </form>
+<hr/>
+    <h1>Bookmark Post</h1>
+    <form action="http://localhost:8000/api/v1/post/bookmarkpost/677fe447776182e348bd4a1f" method="post">
+        <button type="submit">Bookmark Post</button>
+    </form>
+<hr/>
+    <h1>Send Message</h1>
+    <form action="http://localhost:8000/api/v1/message/sendmessage/67802d02bb5b21878458bacf" method="post">
+        <label for="message">message:</label>
+        <input type="text" id="message" name="message" required><br><br>
+        <button type="submit">Send Message</button>
+    </form>
+<hr/>
+    <h1>Get Conversation</h1>
+    <form action="http://localhost:8000/api/v1/message/getconversation/67802d02bb5b21878458bacf" method="post">
+        <button type="submit">Get Conversation</button>
+    </form>
 
 </body>
 </html>

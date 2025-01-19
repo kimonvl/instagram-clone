@@ -389,4 +389,35 @@ export const dislikePost = async (req, res) => {
     }
 }
 
+export const bookmarkPost = async (req, res) => {
+    try {
+        const userId = req.id;
+        const postId = req.params.id;
+
+        const post = await Post.findById(postId);
+        if(!post) return res.status(200).json({message: "Disliked post successfully",success: true,}); 
+        
+        let user = await User.findById(userId);
+        if(user.bookmarks.includes(post._id)){
+            //remove from bookmark
+            user.bookmarks.pull(post._id);
+            await user.save();
+            return res.status(200).json({
+                message: "Post removed from bookmarks",
+                success: true,
+            }); 
+        } else{
+            //add to bookmark
+            user.bookmarks.addToSet(post._id);
+            await user.save();
+            return res.status(200).json({
+                message: "Post added to bookmarks",
+                success: true,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //TODO: delete/edit comment, like/dislike post
