@@ -4,7 +4,7 @@ const selectUserReducer = (state) => state.user;
 
 export const selectCurrentUser = createSelector(
     [selectUserReducer],
-    (userSlice) => userSlice.cuerrentUser
+    (userSlice) => userSlice.currentUser
 );
 
 export const selectIsLoading = createSelector(

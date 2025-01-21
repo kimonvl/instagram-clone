@@ -10,6 +10,7 @@ const USER_INITIAL_STATE = {
 
 export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
     const {type, payload} = action;
+    console.log("userReducer recieved action", action);
 
     switch (type) {
         case USER_ACTION_TYPES.LOGIN_START:
@@ -20,7 +21,7 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
         case USER_ACTION_TYPES.LOGIN_SUCCESS:
                 return {
                     ...state,
-                    currentUser: payload.user,
+                    currentUser: payload,
                     isLoading: false,
                     navigateToHome: true,
                 }

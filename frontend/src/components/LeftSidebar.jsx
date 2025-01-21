@@ -2,13 +2,13 @@ import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp } fr
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '@/store/user/user.selector'
+import { selectCurrentUser } from '../store/user/user.selector'
 
 
 
 const LeftSidebar = () => {
     const user = useSelector(selectCurrentUser);
-
+    console.log("leftsidebar", user);
     const sidebarItems = [
         {icon: <Home/>, text: "Home"},
         {icon: <Search/>, text: "Search"},

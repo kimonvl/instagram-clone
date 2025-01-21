@@ -23,6 +23,7 @@ export function* loginUser(action) {
     try {
         const res = yield call(sendAxiosPost, "user/login", action.payload);
         if(res && res.data.success) {
+            console.log("loginsuccess", res.data.user)
             yield put(loginUserSuccess(res.data.user));
             toast.success(res.data.message);
         }
