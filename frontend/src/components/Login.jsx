@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { toast } from 'sonner'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectIsLoading, selectNavigateToHome } from '@/store/user/user.selector'
+import { loginUserStart } from '@/store/user/user.action'
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -12,7 +15,16 @@ const Login = () => {
     password: ""
   })
 
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const loading = useSelector(selectIsLoading);
+  const navigateToHome = useSelector(selectNavigateToHome);
+
+  useEffect(() => {
+      if(navigateToHome)
+        navigate('/');
+  },
+  [navigateToHome]);
 
   const changeInputHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -21,27 +33,7 @@ const Login = () => {
   const onSubmitSignUp = async (e) => {
     e.preventDefault();
     console.log(input);
-    try {
-      setLoading(true);
-      const res = await axios.post('http://localhost:8000/api/v1/user/login', input, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
-      });
-      if (res.data.success) {
-        toast.success(res.data.message);
-        setInput({
-          email: "",
-          password: ""
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
-    } finally {
-      setLoading(false);
-    }
+    dispatch(loginUserStart(input.email, input.password));
   }
 
   return (

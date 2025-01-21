@@ -4,6 +4,7 @@ const USER_INITIAL_STATE = {
     currentUser: null,
     isLoading: false,
     navigateToLogin: false,
+    navigateToHome: false,
     error: null
 }
 
@@ -20,13 +21,15 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
                 return {
                     ...state,
                     currentUser: payload.user,
-                    isLoading: false
+                    isLoading: false,
+                    navigateToHome: true,
                 }
         case USER_ACTION_TYPES.LOGIN_FAILED:
             return {
                 ...state,
                 error: payload.error,
-                isLoading: false
+                isLoading: false,
+                navigateToHome: false,
             }
         case USER_ACTION_TYPES.SIGNUP_START:
             return {
