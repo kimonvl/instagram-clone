@@ -5,19 +5,30 @@ import { Bookmark, MessageCircle, MoreHorizontal, Send } from 'lucide-react'
 import { Button } from './ui/button'
 import { FaHeart } from 'react-icons/fa'
 import { Badge } from './ui/badge'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '@/store/user/user.selector'
 
-const Post = () => {
+const Post = ({post}) => {
+    const user = useSelector(selectCurrentUser);
+    const postAuthorUsername = post.author.username;
+    const postAuthorImage = post.author.profilePicture;
+    const postImage = post.image;
+    const postLikes = post.likes.length;
+    const postCaption = post.caption;
     return (
         <div className='my-8 w-full max-w-sm mx-auto'>
             <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
                     <Avatar>
-                        <AvatarImage alt="post_image" />
+                        <AvatarImage src={postAuthorImage} alt="post_image" />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className='flex items-center gap-3'>
-                        <h1>Username</h1>
-                        <Badge variant="secondary">Author</Badge>
+                        <h1>{postAuthorUsername}</h1>
+                        {
+                            user && user.username == postAuthorUsername && <Badge variant="secondary">Author</Badge>
+                        }
+                        
                     </div>
                 </div>
 
@@ -33,7 +44,7 @@ const Post = () => {
             </div>
             <img
                 className='rounded-sm my-2 w-full aspect-square object-cover'
-                src="https://res.cloudinary.com/dsvnmjmve/image/upload/v1736430625/zwds6ccsaful8lqsuuvr.jpg"
+                src={postImage}
                 alt="post_image"
             />
 
@@ -48,10 +59,10 @@ const Post = () => {
                 </div>
                 <Bookmark className='cursor-pointer hover:text-gray-600'/>
             </div>
-            <span className='font-medium block mb-2'>24 Likes</span>
+            <span className='font-medium block mb-2'>{`${postLikes} Likes`} </span>
             <p>
-                <span className='font-medium mr-2'>Username</span>
-                Caption
+                <span className='font-medium mr-2'>{postAuthorUsername}</span>
+                {postCaption}
             </p>
             <span className='cursor-pointer text-sm text-gray-400'>
                 View All comments
