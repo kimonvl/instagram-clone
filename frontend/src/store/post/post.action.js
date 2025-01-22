@@ -12,3 +12,7 @@ export const fetchFeedPostsSuccess = (posts) => {
 export const fetchFeedPostsFailed = (error) => {
     return createAction(POST_ACTION_TYPES.FETCH_FEED_POSTS_SUCCESS, error);
 }
+
+export const emptyFeedPosts = () => {
+    return createAction(POST_ACTION_TYPES.EMPTY_FEED_POSTS);
+}

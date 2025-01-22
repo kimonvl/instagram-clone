@@ -1,8 +1,11 @@
 import React from 'react'
+import SuggestedUsers from './SuggestedUsers'
 
 const RightSidebar = () => {
   return (
-    <div>RightSidebar</div>
+    <div className='w-fit my-10 pr-32'>
+      <SuggestedUsers/>
+    </div>
   )
 }
 

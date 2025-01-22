@@ -1,16 +1,36 @@
 import React, { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Feed from './Feed'
 import RightSidebar from './RightSidebar'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchFeedPostsStart } from '@/store/post/post.action'
+import { selectCurrentUser } from '@/store/user/user.selector'
+import { fetchSuggestedUsersStart } from '@/store/user/user.action'
 
 const Home = () => {
+
+  const user = useSelector(selectCurrentUser);
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(!user){
+      navigate("/login");
+    }
+  }, [user]);
+
   // fetch post and suggested users here
   const dispatch = useDispatch();
   useEffect(() =>{
-    dispatch(fetchFeedPostsStart());
-  }, [])
+    if(user) {
+      dispatch(fetchFeedPostsStart());
+    }
+  }, []);
+
+  useEffect(() =>{
+    if(user) {
+      dispatch(fetchSuggestedUsersStart(user._id));
+    }
+  }, []);
 
   return (
     <div className='flex'>

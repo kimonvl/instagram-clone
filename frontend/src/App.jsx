@@ -1,10 +1,13 @@
+import { useEffect } from 'react'
 import './App.css'
 import Home from './components/Home'
 import Login from './components/Login'
 import MainLayout from './components/MainLayout'
 import Profile from './components/Profile'
 import Signup from './components/Signup'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from './store/user/user.selector'
 
 const browserRouter = createBrowserRouter([
   {
@@ -30,6 +33,8 @@ const browserRouter = createBrowserRouter([
     element: <Signup />
   },
 ])
+
+
 
 function App() {
 

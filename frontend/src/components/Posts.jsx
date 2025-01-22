@@ -6,7 +6,7 @@ import { selectFeedPosts } from '@/store/post/post.selector'
 const Posts = () => {
 
   const feedPosts = useSelector(selectFeedPosts);
-
+console.log("posts", feedPosts);
   return (
     <div>
         {feedPosts.map((post) =>{

@@ -21,3 +21,8 @@ export const selectNavigateToHome = createSelector(
     [selectUserReducer],
     (userSlice) => userSlice.navigateToHome
 )
+
+export const selectSuggestedUsers = createSelector(
+    [selectUserReducer],
+    (userSlice) => userSlice.suggestedUsers
+)

@@ -8,3 +8,13 @@ export const sendAxiosPost = async (endpoint, data = {}) => {
         withCredentials: true
       });
 }
+
+export const sendAxiosGet = async (endpoint, params = {}) => {
+  return await axios.get(`http://localhost:8000/api/v1/${endpoint}`, {
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      params, // Pass the params here
+      withCredentials: true
+  });
+};

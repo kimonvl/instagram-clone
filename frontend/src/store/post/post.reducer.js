@@ -14,11 +14,15 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
                 ...state,
                 feedPosts: payload
             }
-    
         case POST_ACTION_TYPES.FETCH_FEED_POSTS_FAILED:
             return {
                 ...state,
                 error: payload
+            }
+        case POST_ACTION_TYPES.EMPTY_FEED_POSTS:
+            return {
+                ...state,
+                feedPosts: []
             }
     
         default:

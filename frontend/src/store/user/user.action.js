@@ -24,3 +24,26 @@ export const loginUserSuccess = (user) => {
 export const loginUserFailed = (error) => {
     return createAction(USER_ACTION_TYPES.LOGIN_FAILED, error);
 }
+
+export const logoutUserStart = () => {
+    return createAction(USER_ACTION_TYPES.LOGOUT_START);
+}
+
+export const logoutUserSuccess = () => {
+    return createAction(USER_ACTION_TYPES.LOGOUT_SUCCESS);
+}
+
+export const logoutUserFailed = (error) => {
+    return createAction(USER_ACTION_TYPES.LOGOUT_FAILED, error);
+}
+
+export const fetchSuggestedUsersStart = (id) => {
+    return createAction(USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_START, id);
+}
+
+export const fetchSuggestedUsersSuccess = (suggestedUsers) => {
+    return createAction(USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_SUCCESS, suggestedUsers);
+}
+export const fetchSuggestedUsersFailed = (error) => {
+    return createAction(USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_FAILED, error);
+}

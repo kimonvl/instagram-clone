@@ -2,6 +2,7 @@ import USER_ACTION_TYPES from "./user.types";
 
 const USER_INITIAL_STATE = {
     currentUser: null,
+    suggestedUsers: [],
     isLoading: false,
     navigateToLogin: false,
     navigateToHome: false,
@@ -46,8 +47,29 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
         case USER_ACTION_TYPES.SIGNUP_FAILED:
             return {
                 ...state,
-                error: payload.error,
+                error: payload,
                 isLoading: false
+            }
+        case USER_ACTION_TYPES.LOGOUT_SUCCESS:
+            return {
+                ...state,
+                currentUser: null,
+                navigateToHome: false,
+            }
+        case USER_ACTION_TYPES.LOGOUT_FAILED:
+            return {
+                ...state,
+                error: payload
+            }
+        case USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_SUCCESS:
+            return {
+                ...state,
+                suggestedUsers: payload
+            }
+        case USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_FAILED:
+            return {
+                ...state,
+                error: payload
             }
     
         default:
