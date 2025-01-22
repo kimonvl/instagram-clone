@@ -4,7 +4,6 @@ const USER_INITIAL_STATE = {
     currentUser: null,
     suggestedUsers: [],
     isLoading: false,
-    navigateToLogin: false,
     navigateToHome: false,
     error: null
 }
@@ -42,7 +41,6 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 isLoading: false,
-                navigateToLogin: true,
             }
         case USER_ACTION_TYPES.SIGNUP_FAILED:
             return {
@@ -71,7 +69,32 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
                 ...state,
                 error: payload
             }
-    
+        case USER_ACTION_TYPES.SEND_FOLLOW_REQUEST_SUCCESS:
+            return {
+                ...state,
+                currentUser: {
+                    ...state.currentUser,
+                    following: Array.from(new Set([...state.currentUser.following, payload])),
+                }
+            }
+        case USER_ACTION_TYPES.SEND_FOLLOW_REQUEST_FAILED:
+            return {
+                ...state,
+                error: payload
+            }
+        case USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_SUCCESS:
+            return {
+                ...state,
+                currentUser: {
+                    ...state.currentUser,
+                    following: Array.from(new Set([...state.currentUser.following])).filter((id) => {return id !== payload}),
+                }
+            }
+        case USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_FAILED:
+            return {
+                ...state,
+                error: payload
+            }
         default:
             return state;
     }

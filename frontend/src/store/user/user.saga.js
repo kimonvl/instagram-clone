@@ -1,15 +1,17 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
 import USER_ACTION_TYPES from "./user.types";
 import { sendAxiosGet, sendAxiosPost } from "@/utils/api-requests/axios.utils";
-import { fetchSuggestedUsersFailed, fetchSuggestedUsersSuccess, loginUserFailed, loginUserSuccess, logoutUserFailed, logoutUserSuccess, signupUserFailed, signupUserSuccess } from "./user.action";
+import { fetchSuggestedUsersFailed, fetchSuggestedUsersSuccess, loginUserFailed, loginUserSuccess, logoutUserFailed, logoutUserSuccess, sendFollowRequestFailed, sendFollowRequestSuccess, sendUnfollowRequestFailed, sendUnfollowRequestSuccess, signupUserFailed, signupUserSuccess } from "./user.action";
 import { toast } from "sonner";
-import { emptyFeedPosts, fetchFeedPostsSuccess } from "../post/post.action";
+import { emptyFeedPosts } from "../post/post.action";
 
 export function* signupUser(action) {
+    const {username, email, password, navigate} = action.payload
     try {
-        const res = yield call(sendAxiosPost, "user/register", action.payload); 
+        const res = yield call(sendAxiosPost, "user/register", {username, email, password}); 
         if(res && res.data.success) {
             yield put(signupUserSuccess());
+            navigate("/login");
             toast.success(res.data.message);
         }
     } catch (error) {
@@ -58,6 +60,34 @@ export function* fetchSuggestedUsers(action) {
     }
 }
 
+export function* followUser(action) {
+    try {
+        const targetUserId = action.payload;
+        const res = yield call(sendAxiosPost, `user/followorunfollow/${targetUserId}`)
+        if(res && res.data.success) {
+            yield put(sendFollowRequestSuccess(targetUserId));
+            toast.success(res.data.message);
+        }
+    } catch (error) {
+        yield put(sendFollowRequestFailed(error));
+        toast.error(error.response.data.message);
+    }
+}
+
+export function* unfollowUser(action) {
+    try {
+        const targetUserId = action.payload;
+        const res = yield call(sendAxiosPost, `user/followorunfollow/${targetUserId}`)
+        if(res && res.data.success) {
+            yield put(sendUnfollowRequestSuccess(targetUserId));
+            toast.success(res.data.message);
+        }
+    } catch (error) {
+        yield put(sendUnfollowRequestFailed(error));
+        toast.error(error.response.data.message);
+    }
+}
+
 export function* onSignupUserStart() {
     yield takeLatest(USER_ACTION_TYPES.SIGNUP_START, signupUser);
 }
@@ -74,6 +104,14 @@ export function* onFetchSuggestedUsersStart() {
     yield takeLatest(USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_START, fetchSuggestedUsers);
 }
 
+export function* onFollowUserStart() {
+    yield takeLatest(USER_ACTION_TYPES.SEND_FOLLOW_REQUEST_START, followUser);
+}
+
+export function* onUnfollowUserStart() {
+    yield takeLatest(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_START, unfollowUser);
+}
+
 export function* userSagas() {
-    yield all([call(onSignupUserStart), call(onLoginUserStart), call(onLogoutUserStart), call(onFetchSuggestedUsersStart)]);
+    yield all([call(onSignupUserStart), call(onLoginUserStart), call(onLogoutUserStart), call(onFetchSuggestedUsersStart), call(onFollowUserStart), call(onUnfollowUserStart)]);
 }

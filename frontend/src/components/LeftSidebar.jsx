@@ -1,13 +1,15 @@
 import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from '../store/user/user.selector'
 import { logoutUserStart } from '@/store/user/user.action'
+import CreatePost from './CreatePost'
 
 
 
 const LeftSidebar = () => {
+    const [open, setOpen] = useState(false);
     const user = useSelector(selectCurrentUser);
     const dispatch = useDispatch();
     console.log("leftsidebar", user);
@@ -39,6 +41,9 @@ const LeftSidebar = () => {
             case "Logout":
                 logoutHandler();
                 break;
+            case "Create":
+                setOpen(true);
+                break;
         
             default:
                 break;
@@ -62,6 +67,7 @@ const LeftSidebar = () => {
                 }
             </div>
         </div>
+        <CreatePost open={open} setOpen={setOpen}/>
     </div>
     )
 }

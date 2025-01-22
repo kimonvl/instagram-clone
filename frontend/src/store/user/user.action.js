@@ -1,8 +1,8 @@
 import { createAction } from "../../utils/reducer/reducer.utils";
 import USER_ACTION_TYPES from "./user.types"
 
-export const signupUserStart = (username, email, password) => {
-    return createAction(USER_ACTION_TYPES.SIGNUP_START, {username, email, password});
+export const signupUserStart = (username, email, password, navigate) => {
+    return createAction(USER_ACTION_TYPES.SIGNUP_START, {username, email, password, navigate});
 }
 
 export const signupUserSuccess = () => {
@@ -44,6 +44,29 @@ export const fetchSuggestedUsersStart = (id) => {
 export const fetchSuggestedUsersSuccess = (suggestedUsers) => {
     return createAction(USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_SUCCESS, suggestedUsers);
 }
+
 export const fetchSuggestedUsersFailed = (error) => {
     return createAction(USER_ACTION_TYPES.FETCH_SUGGESTED_USERS_FAILED, error);
+}
+
+export const sendFollowRequestStart = (targetUser) => {
+    return createAction(USER_ACTION_TYPES.SEND_FOLLOW_REQUEST_START, targetUser);
+}
+
+export const sendFollowRequestSuccess = (targetUser) => {
+    return createAction(USER_ACTION_TYPES.SEND_FOLLOW_REQUEST_SUCCESS, targetUser);
+}
+export const sendFollowRequestFailed = (error) => {
+    return createAction(USER_ACTION_TYPES.SEND_FOLLOW_REQUEST_FAILED, error);
+}
+
+export const sendUnfollowRequestStart = (targetUser) => {
+    return createAction(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_START, targetUser);
+}
+
+export const sendUnfollowRequestSuccess = (targetUser) => {
+    return createAction(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_SUCCESS, targetUser);
+}
+export const sendUnfollowRequestFailed = (error) => {
+    return createAction(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_FAILED, error);
 }

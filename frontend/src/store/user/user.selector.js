@@ -12,11 +12,6 @@ export const selectIsLoading = createSelector(
     (userSlice) => userSlice.isLoading
 )
 
-export const selectNavigateToLogin = createSelector(
-    [selectUserReducer],
-    (userSlice) => userSlice.navigateToLogin
-)
-
 export const selectNavigateToHome = createSelector(
     [selectUserReducer],
     (userSlice) => userSlice.navigateToHome

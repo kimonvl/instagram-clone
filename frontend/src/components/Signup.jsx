@@ -4,9 +4,8 @@ import { Button } from './ui/button'
 import { Link, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectIsLoading, selectNavigateToLogin } from '../store/user/user.selector'
+import { selectIsLoading } from '../store/user/user.selector'
 import { signupUserStart } from '@/store/user/user.action'
-import { useEffect } from 'react'
 
 const Signup = () => {
   const [input, setInput] = useState({
@@ -18,13 +17,6 @@ const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const loading = useSelector(selectIsLoading);
-  const navigateToLogin = useSelector(selectNavigateToLogin);
-
-  useEffect(() => {
-    if(navigateToLogin)
-      navigate('/login');
-  },
-  [navigateToLogin]);
 
   const changeInputHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -33,7 +25,7 @@ const Signup = () => {
   const onSubmitSignUp = async (e) => {
     e.preventDefault();
     console.log(input);
-    dispatch(signupUserStart(input.username, input.email, input.password));
+    dispatch(signupUserStart(input.username, input.email, input.password, navigate));
   }
 
   return (
