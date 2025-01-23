@@ -18,7 +18,7 @@ export const emptyFeedPosts = () => {
 }
 
 export const createPostStart = (formData, setOpen) => {
-    return createAction(POST_ACTION_TYPES.CREATE_POST_START, {formData, setOpen});
+    return createAction(POST_ACTION_TYPES.CREATE_POST_START, { formData, setOpen });
 }
 
 export const createPostSuccess = () => {
@@ -27,4 +27,28 @@ export const createPostSuccess = () => {
 
 export const createPostFailed = (error) => {
     return createAction(POST_ACTION_TYPES.CREATE_POST_FAILED, error);
+}
+
+export const dislikePostStart = (postId) => {
+    return createAction(POST_ACTION_TYPES.DISLIKE_POST_START, postId);
+}
+
+export const dislikePostSuccess = (postId, userId) => {
+    return createAction(POST_ACTION_TYPES.DISLIKE_POST_SUCCESS, { postId, userId });
+}
+
+export const dislikePostFailed = (error) => {
+    return createAction(POST_ACTION_TYPES.DISLIKE_POST_FAILED, error);
+}
+
+export const likePostStart = (postId) => {
+    return createAction(POST_ACTION_TYPES.LIKE_POST_START, postId);
+}
+
+export const likePostSuccess = (postId, userId) => {
+    return createAction(POST_ACTION_TYPES.LIKE_POST_SUCCESS, { postId, userId });
+}
+
+export const likePostFailed = (error) => {
+    return createAction(POST_ACTION_TYPES.LIKE_POST_FAILED, error);
 }

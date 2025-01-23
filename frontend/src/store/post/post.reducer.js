@@ -41,6 +41,18 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
                 loadingCreatePost: false,
                 error: payload
             }
+            case POST_ACTION_TYPES.DISLIKE_POST:
+                return {
+                    ...state,
+                    feedPosts: state.feedPosts.map(post => 
+                        post.id === payload.postId 
+                            ? {
+                                ...post,
+                                likes: post.likes.filter(userId => userId !== payload.userId)
+                            }
+                            : post
+                    ),
+                };
     
         default:
             return state;

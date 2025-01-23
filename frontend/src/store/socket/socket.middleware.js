@@ -26,6 +26,10 @@ const socketMiddleware = (store) => (next) => (action) => {
                     store.dispatch(createAction(SOCKET_ACTION_TYPES.SET_SOCKET, null));
                 })
 
+                newSocket.on("newLikeNotification", () => {
+                    //create notification slice and dispatch the notifications
+                })
+
                 newSocket.on("friendOnline", () => {
                     
                 })

@@ -1,20 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { Bookmark, MessageCircle, MoreHorizontal, Send } from 'lucide-react'
 import { Button } from './ui/button'
-import { FaHeart } from 'react-icons/fa'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { Badge } from './ui/badge'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from '@/store/user/user.selector'
+import { dislikePostStart, likePostStart } from '@/store/post/post.action'
 
 const Post = ({post}) => {
+    const dispatch = useDispatch();
     const user = useSelector(selectCurrentUser);
     const postAuthorUsername = post.author.username;
     const postAuthorImage = post.author.profilePicture;
     const postImage = post.image;
     const postLikes = post.likes.length;
     const postCaption = post.caption;
+    const postId = post._id
+ 
+    const [liked, setLiked] = useState(post.likes.includes(user._id) ? true : false);
+
+    const likeOrDislikeHandler = () => {
+        if(liked) {
+            dispatch(dislikePostStart(postId));
+            setLiked(false);
+        } else {
+            dispatch(likePostStart(postId));
+            setLiked(true);
+        }
+    }
+
     return (
         <div className='my-8 w-full max-w-sm mx-auto'>
             <div className='flex items-center justify-between'>
@@ -50,7 +66,9 @@ const Post = ({post}) => {
 
             <div className='flex items-center justify-between my-2'>
                 <div className='flex items-center gap-3'>
-                    <FaHeart size={'24'} />
+                    {
+                        liked ? <FaHeart onClick={likeOrDislikeHandler} size={'24'} className='cursor-pointer text-red-600' /> : <FaRegHeart onClick={likeOrDislikeHandler} size={'22px'} className='cursor-pointer hover:text-gray-600' />
+                    }
 
                     <MessageCircle 
                     className='cursor-pointer hover:text-gray-600'

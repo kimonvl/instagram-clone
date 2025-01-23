@@ -3,6 +3,8 @@ import cloudinary from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from "../models/comment.model.js";
+import LikeNotification from "../models/likeNotification.model.js";
+import { getRecieverSocketId } from "../socket/socket.js";
 
 export const addNewPost = async (req, res) => {
     try {
@@ -355,6 +357,26 @@ export const likePost = async (req, res) => {
         post.likes.addToSet(userId);
         await post.save();
 
+        const likeNotification = LikeNotification.create({senderId: userId, recieverId: post.author, postId: post._id});
+
+        if(likeNotification){
+            // Populate sender details if needed
+            const populatedNotification = await likeNotification
+                .populate('senderId', 'username profilePicture')
+                .execPopulate();
+
+            // Check if the receiver is online
+            const receiverSocketId = getRecieverSocketId(post.author.toString());
+            if (receiverSocketId) {
+                // Emit the notification directly as the populated object
+                io.to(receiverSocketId).emit("newLikeNotification", populatedNotification.toObject());
+            } else {
+                console.log("Receiver is not online, notification stored in DB");
+            }
+        } else {
+            console.log("Failed to create and send notification");
+        }
+
         return res.status(200).json({
             message: "Liked post successfully",
             success: true,
@@ -373,12 +395,20 @@ export const dislikePost = async (req, res) => {
         if(!post){
             return res.status(400).json({
                 message: "Post not found",
-                success: false``,
+                success: false,
             }); 
         }
 
         post.likes.pull(userId);
         await post.save();
+
+        const deleted = await LikeNotification.findOneAndDelete({senderId: userId, receiverId: post.author, postId: post._id});
+
+        if (deleted) {
+            console.log('Notification deleted:', deleted);
+        } else {
+            console.log('Notification not found');
+        }
 
         return res.status(200).json({
             message: "Disliked post successfully",
