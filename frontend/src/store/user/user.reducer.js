@@ -1,3 +1,4 @@
+import POST_ACTION_TYPES from "../post/post.types";
 import USER_ACTION_TYPES from "./user.types";
 
 const USER_INITIAL_STATE = {
@@ -94,6 +95,22 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 error: payload
+            }
+        case USER_ACTION_TYPES.ADD_POST_TO_USER:
+            return {
+                ...state,
+                currentUser: {
+                    ...state.currentUser,
+                    posts: [...state.currentUser.posts, payload]
+                }
+            }
+        case USER_ACTION_TYPES.REMOVE_POST_FROM_USER:
+            return {
+                ...state,
+                currentUser: {
+                    ...state.currentUser,
+                    posts: posts.filter((post) => post._id !== payload)
+                }
             }
         default:
             return state;

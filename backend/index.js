@@ -6,10 +6,9 @@ import connectDB from "./utils/db.js";
 import userRouter from "./routes/user.router.js";
 import postRouter from "./routes/post.router.js";
 import path from "path";
+import { app, server } from "./socket/socket.js";
 
 dotenv.config({});
-
-const app = express();
 
 const PORT = process.env.PORT || 3000;
 
@@ -36,7 +35,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/post", postRouter);
 app.use("/api/v1/message", messageRouter);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectDB();
     console.log(`Server listen at port ${PORT}`);
 })

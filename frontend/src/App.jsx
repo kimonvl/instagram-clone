@@ -5,9 +5,8 @@ import Login from './components/Login'
 import MainLayout from './components/MainLayout'
 import Profile from './components/Profile'
 import Signup from './components/Signup'
-import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from './store/user/user.selector'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
 
 const browserRouter = createBrowserRouter([
   {

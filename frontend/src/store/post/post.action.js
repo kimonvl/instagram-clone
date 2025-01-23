@@ -16,3 +16,15 @@ export const fetchFeedPostsFailed = (error) => {
 export const emptyFeedPosts = () => {
     return createAction(POST_ACTION_TYPES.EMPTY_FEED_POSTS);
 }
+
+export const createPostStart = (formData, setOpen) => {
+    return createAction(POST_ACTION_TYPES.CREATE_POST_START, {formData, setOpen});
+}
+
+export const createPostSuccess = () => {
+    return createAction(POST_ACTION_TYPES.CREATE_POST_SUCCESS);
+}
+
+export const createPostFailed = (error) => {
+    return createAction(POST_ACTION_TYPES.CREATE_POST_FAILED, error);
+}

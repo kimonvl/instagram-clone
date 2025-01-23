@@ -2,6 +2,7 @@ import POST_ACTION_TYPES from "./post.types";
 
 const POST_INITIAL_STATE = {
     feedPosts: [],
+    loadingCreatePost: false,
     error: null,
 }
 
@@ -23,6 +24,22 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 feedPosts: []
+            }
+        case POST_ACTION_TYPES.CREATE_POST_START:
+            return {
+                ...state,
+                loadingCreatePost: true
+            }
+        case POST_ACTION_TYPES.CREATE_POST_SUCCESS:
+            return {
+                ...state,
+                loadingCreatePost: false
+            }
+        case POST_ACTION_TYPES.CREATE_POST_FAILED:
+            return {
+                ...state,
+                loadingCreatePost: false,
+                error: payload
             }
     
         default:

@@ -4,21 +4,22 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Textarea } from './ui/textarea'
 import { Button } from './ui/button'
 import { Loader2 } from 'lucide-react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from '@/store/user/user.selector'
 import { useState } from 'react'
+import { createPostStart } from '@/store/post/post.action'
+import { selectLoadingCreatePost } from '@/store/post/post.selector'
 
 const CreatePost = ({ open, setOpen }) => {
     const currentUser = useSelector(selectCurrentUser);
-
+    const dispatch = useDispatch();
     const imageRef = useRef();
 
     const [caption, setCaption] = useState("");
     const [imagePreview, setImagePreview] = useState("");
     const [file, setFile] = useState("");
     //replace the loading with redux state var
-    const [loading, setLoading] = useState(false);
-
+    const loading = useSelector(selectLoadingCreatePost);
     const imageChangeHandler = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -32,7 +33,10 @@ const CreatePost = ({ open, setOpen }) => {
     };
 
     const createPostHandler = () => {
-        
+        const formData = new FormData();
+        formData.append("caption", caption);
+        if(imagePreview) formData.append("image", file);
+        dispatch(createPostStart(formData, setOpen));
     }
 
     return (

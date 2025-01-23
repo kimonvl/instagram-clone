@@ -67,6 +67,15 @@ export const sendUnfollowRequestStart = (targetUser) => {
 export const sendUnfollowRequestSuccess = (targetUser) => {
     return createAction(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_SUCCESS, targetUser);
 }
+
 export const sendUnfollowRequestFailed = (error) => {
     return createAction(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_FAILED, error);
+}
+
+export const addPostToUser = (post) => {
+    return createAction(USER_ACTION_TYPES.ADD_POST_TO_USER, post);
+}
+
+export const removePostFromUser = (postId) => {
+    return createAction(USER_ACTION_TYPES.REMOVE_POST_FROM_USER, postId);
 }

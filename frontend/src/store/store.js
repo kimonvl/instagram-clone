@@ -5,10 +5,11 @@ import storage from"redux-persist/lib/storage";
 import createSagaMiddleware from "redux-saga"
 import { rootReducer } from "./root-reducer";
 import { rootSaga } from "./root-saga";
+import socketMiddleware from "./socket/socket.middleware";
 
 const sagaMiddleware = createSagaMiddleware()
 
-const middlewares = [logger, sagaMiddleware];
+const middlewares = [logger, socketMiddleware, sagaMiddleware];
 
 const composedEnhancers = compose(applyMiddleware(...middlewares));
 
