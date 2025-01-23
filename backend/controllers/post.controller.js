@@ -4,7 +4,8 @@ import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from "../models/comment.model.js";
 import LikeNotification from "../models/likeNotification.model.js";
-import { getRecieverSocketId } from "../socket/socket.js";
+import { getRecieverSocketId, io } from "../socket/socket.js";
+import mongoose from "mongoose";
 
 export const addNewPost = async (req, res) => {
     try {
@@ -356,14 +357,16 @@ export const likePost = async (req, res) => {
 
         post.likes.addToSet(userId);
         await post.save();
-
-        const likeNotification = LikeNotification.create({senderId: userId, recieverId: post.author, postId: post._id});
+        const receiverId = new mongoose.Types.ObjectId(post.author.toString());
+console.log("creating notification with recieverId: ", post.author);
+        const likeNotification = await LikeNotification.create({senderId: userId, receiverId, postId: post._id});
 
         if(likeNotification){
             // Populate sender details if needed
-            const populatedNotification = await likeNotification
-                .populate('senderId', 'username profilePicture')
-                .execPopulate();
+            const populatedNotification = await LikeNotification.findById(likeNotification._id).populate(
+                'senderId',
+                'username profilePicture'
+            );
 
             // Check if the receiver is online
             const receiverSocketId = getRecieverSocketId(post.author.toString());

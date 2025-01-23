@@ -1,6 +1,7 @@
 import { createAction } from "@/utils/reducer/reducer.utils";
 import { io } from "socket.io-client";
 import SOCKET_ACTION_TYPES from "./socket.types";
+import NOTIFICATION_ACTION_TYPES from "../notification/notification.types";
 
 const socketMiddleware = (store) => (next) => (action) => {
 
@@ -14,7 +15,10 @@ const socketMiddleware = (store) => (next) => (action) => {
                     query: {
                         userId: user?._id
                     },
-                    transports: ['websocket']
+                    transports: ['websocket'],
+                    reconnection: true, // Enable automatic reconnection
+                    reconnectionAttempts: 10, // Number of reconnection attempts
+                    reconnectionDelay: 1000,
                 });
 
                 newSocket.on('connect', () => {
@@ -26,10 +30,12 @@ const socketMiddleware = (store) => (next) => (action) => {
                     store.dispatch(createAction(SOCKET_ACTION_TYPES.SET_SOCKET, null));
                 })
 
-                newSocket.on("newLikeNotification", () => {
+                newSocket.on("newLikeNotification", (notification) => {
                     //create notification slice and dispatch the notifications
+                    console.log("recieved: ", notification);
+                    store.dispatch(createAction(NOTIFICATION_ACTION_TYPES.ADD_NEW_LIKE_NOTIFICATION, notification));
                 })
-
+                
                 newSocket.on("friendOnline", () => {
                     
                 })

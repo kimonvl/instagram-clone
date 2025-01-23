@@ -4,7 +4,7 @@ import { sendAxiosGet, sendAxiosPostJson } from "@/utils/api-requests/axios.util
 import { fetchSuggestedUsersFailed, fetchSuggestedUsersSuccess, loginUserFailed, loginUserSuccess, logoutUserFailed, logoutUserSuccess, sendFollowRequestFailed, sendFollowRequestSuccess, sendUnfollowRequestFailed, sendUnfollowRequestSuccess, signupUserFailed, signupUserSuccess } from "./user.action";
 import { toast } from "sonner";
 import { emptyFeedPosts } from "../post/post.action";
-import { socketConnect } from "../socket/socket.action";
+import { socketConnect, socketDisconnect } from "../socket/socket.action";
 
 export function* signupUser(action) {
     const {username, email, password, navigate} = action.payload
@@ -41,6 +41,7 @@ export function* logoutUser() {
         if(res && res.data.success) {
             yield put(logoutUserSuccess());
             yield put(emptyFeedPosts());
+            yield put(socketDisconnect());
             toast.success(res.data.message);
         }
     } catch (error) {

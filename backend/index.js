@@ -25,6 +25,7 @@ app.use(cors(corsOptions));
 //    __dirname might not be defined if you're using ES modules, so adjust accordingly:
 import { fileURLToPath } from "url";
 import messageRouter from "./routes/message.router.js";
+import notificationRouter from "./routes/notification.router.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/post", postRouter);
 app.use("/api/v1/message", messageRouter);
+app.use("/api/v1/notification", notificationRouter);
 
 server.listen(PORT, () => {
     connectDB();

@@ -6,6 +6,10 @@ import MainLayout from './components/MainLayout'
 import Profile from './components/Profile'
 import Signup from './components/Signup'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentUser } from './store/user/user.selector'
+import { selectSocket } from './store/socket/socket.selector'
+import { socketConnect } from './store/socket/socket.action'
 
 
 const browserRouter = createBrowserRouter([
@@ -36,6 +40,17 @@ const browserRouter = createBrowserRouter([
 
 
 function App() {
+
+  const currentUser = useSelector(selectCurrentUser);
+  const socket = useSelector(selectSocket);
+  const dispatch = useDispatch();
+
+  useEffect(() =>{
+    if(currentUser && !socket) {
+      dispatch(socketConnect());
+    }
+  } , [])
+  
 
   return (
     <>
