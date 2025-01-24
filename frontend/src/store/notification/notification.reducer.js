@@ -24,6 +24,16 @@ const notificationReducer = (state = NOTIFICATION_INITIAL_STATE, action) => {
                 ...state,
                 error: payload
             };
+        case NOTIFICATION_ACTION_TYPES.FETCH_OFFLINE_UNSEEN_LIKE_NOTIFICATIONS_SUCCESS:
+            return {
+                ...state,
+                unseenLikeNotifications: [...state.unseenLikeNotifications, ...payload]
+            };
+        case NOTIFICATION_ACTION_TYPES.FETCH_OFFLINE_UNSEEN_LIKE_NOTIFICATIONS_FAILED:
+            return {
+                ...state,
+                error: payload
+            };
     
         default:
             return state;
