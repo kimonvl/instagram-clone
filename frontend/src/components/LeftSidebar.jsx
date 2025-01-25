@@ -6,17 +6,23 @@ import { selectCurrentUser } from '../store/user/user.selector';
 import { logoutUserStart } from '@/store/user/user.action';
 import CreatePost from './CreatePost';
 import LikeNotification from './LikeNotification';
+import { selectSeenNotifications, selectUnseenNotifications, selectUnseenNotificationsForView } from '@/store/notification/notification.selector';
+import { clearUnseenNotificationForView, fetchSeenNotificationsStart, markAsSeenNotificationStart } from '@/store/notification/notification.action';
 import FollowNotification from './FollowNotification';
-import { selectUnseenLikeNotifications } from '@/store/notification/notification.selector';
-import { markAsSeenLikeNotificationStart } from '@/store/notification/notification.action';
+import { redirect, useNavigate } from 'react-router-dom';
 
 const LeftSidebar = () => {
     const [open, setOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
 
     const user = useSelector(selectCurrentUser);
-    const unseenLikeNotification = useSelector(selectUnseenLikeNotifications);
+    const unseenNotificationForView = useSelector(selectUnseenNotificationsForView);
+    const unseenNotification = useSelector(selectUnseenNotifications);
+    const seenNotifications = useSelector(selectSeenNotifications);
+    console.log("unseen", unseenNotification);
+    console.log("seen", seenNotifications);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const sidebarItems = [
         { icon: <Home />, text: "Home" },
@@ -38,13 +44,20 @@ const LeftSidebar = () => {
     ];
 
     const logoutHandler = () => {
-        dispatch(logoutUserStart());
+        dispatch(logoutUserStart(navigate));
     };
 
     const handleNotificationsOpen = () => {
-        setNotificationOpen((prev) => !prev);
-        if(unseenLikeNotification.length > 0) {
-            dispatch(markAsSeenLikeNotificationStart());
+        if (notificationOpen) {
+            setNotificationOpen(false);
+            dispatch(clearUnseenNotificationForView());
+        } else {
+            setNotificationOpen(true);
+            dispatch(fetchSeenNotificationsStart());
+        }
+        if (unseenNotification.length > 0) {
+            dispatch(markAsSeenNotificationStart());
+            
         }
     }
 
@@ -86,14 +99,14 @@ const LeftSidebar = () => {
                             {item.text === "Notifications" ? (
                                 <div className="relative w-6 h-6">
                                     {item.icon}
-                                    {unseenLikeNotification.length > 0 && (
+                                    {unseenNotification.length > 0 && (
                                         <span
                                             className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center"
                                             style={{
                                                 transform: 'translate(50%, -50%)',
                                             }}
                                         >
-                                            {unseenLikeNotification.length}
+                                            {unseenNotification.length}
                                         </span>
                                     )}
                                 </div>
@@ -114,13 +127,36 @@ const LeftSidebar = () => {
                     }`}
             >
                 {notificationOpen && (
-                    <div className="px-4 py-6">
-                        <h2 className="font-bold text-lg mb-4">Notifications</h2>
-                        <div className="flex flex-col gap-3">
-                            <LikeNotification username="Kimon" userImage={"https://res.cloudinary.com/dsvnmjmve/image/upload/v1737588183/c8miraf3wfikwqsoq72s.jpg"} />
-                            <FollowNotification username="Kimon" userImage={"https://res.cloudinary.com/dsvnmjmve/image/upload/v1737588183/c8miraf3wfikwqsoq72s.jpg"} />
+                    <>
+                        <div className="px-4 py-6">
+                            <h2 className="font-bold text-lg mb-4">New Notifications</h2>
+                            <div className="flex flex-col gap-3">
+                                {
+                                    unseenNotificationForView.map((notification) => {
+                                        if(notification.type == "like"){
+                                            return (<LikeNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                        } else if(notification.type == "follow") {
+                                            return (<FollowNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                        }
+                                    })
+                                }
+                            </div>
                         </div>
-                    </div>
+                        <div className="px-4 py-6">
+                            <h2 className="font-bold text-lg mb-4">Old Notifications</h2>
+                            <div className="flex flex-col gap-3">
+                                {
+                                    seenNotifications.map((notification) => {
+                                        if(notification.type == "like"){
+                                            return (<LikeNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                        } else if(notification.type == "follow") {
+                                            return (<FollowNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                        }
+                                    })
+                                }
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
             <CreatePost open={open} setOpen={setOpen} />

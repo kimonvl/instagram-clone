@@ -1,3 +1,4 @@
+import USER_ACTION_TYPES from "../user/user.types";
 import POST_ACTION_TYPES from "./post.types";
 
 const POST_INITIAL_STATE = {
@@ -53,6 +54,8 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
                             : post
                     ),
                 };
+            case USER_ACTION_TYPES.LOGOUT_SUCCESS:
+                return POST_INITIAL_STATE;
     
         default:
             return state;

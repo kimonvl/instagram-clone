@@ -18,6 +18,11 @@ const followNotificationSchema = new Schema(
             type: Boolean,
             default: false,
         },
+        type: {
+            type: String,
+            default: 'follow',
+            immutable: true, // Makes the field immutable
+        },
     },
     {
         timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields

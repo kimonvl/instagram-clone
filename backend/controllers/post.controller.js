@@ -4,8 +4,7 @@ import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from "../models/comment.model.js";
 import LikeNotification from "../models/likeNotification.model.js";
-import { getRecieverSocketId, io } from "../socket/socket.js";
-import mongoose from "mongoose";
+import { createLikeNotification, deleteLikeNotification } from "./notification.controller.js";
 
 export const addNewPost = async (req, res) => {
     try {
@@ -76,7 +75,7 @@ export const getAllPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const userId = req.id;
-        const posts = await Post.find({ author: userId }).sort({ createdAt: -1 }).populate("author", "username profilePicture");
+        const posts = await Post.find({ author: userId }).sort({ createdAt: -1 }).populate("author", "_id username profilePicture");
         if (!posts) {
             return res.status(400).json({
                 message: "No posts found",
@@ -357,28 +356,8 @@ export const likePost = async (req, res) => {
 
         post.likes.addToSet(userId);
         await post.save();
-        const receiverId = new mongoose.Types.ObjectId(post.author.toString());
-console.log("creating notification with recieverId: ", post.author);
-        const likeNotification = await LikeNotification.create({senderId: userId, receiverId, postId: post._id});
-
-        if(likeNotification){
-            // Populate sender details if needed
-            const populatedNotification = await LikeNotification.findById(likeNotification._id).populate(
-                'senderId',
-                'username profilePicture'
-            );
-
-            // Check if the receiver is online
-            const receiverSocketId = getRecieverSocketId(post.author.toString());
-            if (receiverSocketId) {
-                // Emit the notification directly as the populated object
-                io.to(receiverSocketId).emit("newLikeNotification", populatedNotification.toObject());
-            } else {
-                console.log("Receiver is not online, notification stored in DB");
-            }
-        } else {
-            console.log("Failed to create and send notification");
-        }
+        //create notification on post like in separate function
+        await createLikeNotification(userId, post);
 
         return res.status(200).json({
             message: "Liked post successfully",
@@ -386,6 +365,10 @@ console.log("creating notification with recieverId: ", post.author);
         });
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            message: "Failed to liked post",
+            success: false,
+        });
     }
 }
 
@@ -405,13 +388,7 @@ export const dislikePost = async (req, res) => {
         post.likes.pull(userId);
         await post.save();
 
-        const deleted = await LikeNotification.findOneAndDelete({senderId: userId, receiverId: post.author, postId: post._id});
-
-        if (deleted) {
-            console.log('Notification deleted:', deleted);
-        } else {
-            console.log('Notification not found');
-        }
+        await deleteLikeNotification(userId, post);
 
         return res.status(200).json({
             message: "Disliked post successfully",
@@ -419,6 +396,10 @@ export const dislikePost = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            message: "Failed to disliked post",
+            success: false,
+        });
     }
 }
 

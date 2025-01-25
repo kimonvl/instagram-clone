@@ -23,6 +23,11 @@ const likeNotificationSchema = new Schema(
             type: Boolean,
             default: false,
         },
+        type: {
+            type: String,
+            default: 'like',
+            immutable: true, // Makes the field immutable
+        },
     },
     {
         timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields

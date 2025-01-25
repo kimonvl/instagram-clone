@@ -25,8 +25,8 @@ export const loginUserFailed = (error) => {
     return createAction(USER_ACTION_TYPES.LOGIN_FAILED, error);
 }
 
-export const logoutUserStart = () => {
-    return createAction(USER_ACTION_TYPES.LOGOUT_START);
+export const logoutUserStart = (navigate) => {
+    return createAction(USER_ACTION_TYPES.LOGOUT_START, navigate);
 }
 
 export const logoutUserSuccess = () => {

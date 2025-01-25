@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
 import { Bookmark, MessageCircle, MoreHorizontal, Send } from 'lucide-react'
@@ -8,18 +8,26 @@ import { Badge } from './ui/badge'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from '@/store/user/user.selector'
 import { dislikePostStart, likePostStart } from '@/store/post/post.action'
+import { useNavigate } from 'react-router-dom'
 
 const Post = ({post}) => {
-    const dispatch = useDispatch();
     const user = useSelector(selectCurrentUser);
+    const navigate = useNavigate()
+    useEffect(() => {
+        if(!user){
+            navigate("/login");
+        }
+    }, [])
+
+    const dispatch = useDispatch();
     const postAuthorUsername = post.author.username;
     const postAuthorImage = post.author.profilePicture;
     const postImage = post.image;
     const postLikes = post.likes.length;
     const postCaption = post.caption;
-    const postId = post._id
+    const postId = post?._id
  
-    const [liked, setLiked] = useState(post.likes.includes(user._id) ? true : false);
+    const [liked, setLiked] = useState(post.likes.includes(user?._id) ? true : false);
 
     const likeOrDislikeHandler = () => {
         if(liked) {

@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
+import { createFollowNotification, deleteFollowNotification } from "./notification.controller.js";
 export const register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -203,16 +204,23 @@ export const followOrUnfollow = async (req, res) => {
                 User.updateOne({ _id: userId }, { $pull: { following: targetUserId } }),
                 User.updateOne({ _id: targetUserId }, { $pull: { followers: userId } }),
             ])
-            console.log("unfollow trigered")
+
+            //delete follow notification
+            await deleteFollowNotification(userId, targetUserId);
+
+            console.log("unfollow trigered");
             return res.status(200).json({ message: 'Unfollowed successfully', success: true });
         } else {
             // follow logic ayega
             await Promise.all([
                 User.updateOne({ _id: userId }, { $push: { following: targetUserId } }),
                 User.updateOne({ _id: targetUserId }, { $push: { followers: userId } }),
-                console.log("follow trigered")
-
             ])
+
+            //create and send notification
+            await createFollowNotification(userId, targetUserId);
+
+            console.log("follow trigered")
             return res.status(200).json({ message: 'Followed successfully', success: true });
         }
     } catch (error) {

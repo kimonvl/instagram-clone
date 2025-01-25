@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchFeedPostsStart } from '@/store/post/post.action'
 import { selectCurrentUser } from '@/store/user/user.selector'
 import { fetchSuggestedUsersStart } from '@/store/user/user.action'
-import { fetchOfflineUnseenLikeNotificationsStart } from '@/store/notification/notification.action'
+import { fetchOfflineUnseenNotificationsStart } from '@/store/notification/notification.action'
 
 const Home = () => {
 
@@ -35,7 +35,7 @@ const Home = () => {
 
   useEffect(() =>{
     if(user) {
-      dispatch(fetchOfflineUnseenLikeNotificationsStart(user._id));
+      dispatch(fetchOfflineUnseenNotificationsStart(user._id));
     }
   }, []);
 

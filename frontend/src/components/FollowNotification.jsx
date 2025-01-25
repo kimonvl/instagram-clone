@@ -1,15 +1,15 @@
 import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 const FollowNotification = ({ username, userImage }) => {
     return (
         <div className="p-3 border rounded-lg shadow-sm flex items-center gap-4">
             {/* Profile Picture */}
             <div className="flex-shrink-0">
-                <img
-                    src={userImage}
-                    alt={username}
-                    className="w-10 h-10 rounded-full"
-                />
+                <Avatar className='w-6 h-6'>
+                    <AvatarImage src={userImage} alt="@shadcn" />
+                    <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
             </div>
 
             {/* Notification Message */}

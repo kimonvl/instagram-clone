@@ -13,7 +13,7 @@ const middlewares = [logger, socketMiddleware, sagaMiddleware];
 
 const composedEnhancers = compose(applyMiddleware(...middlewares));
 
-const persistConfig = {
+export const persistConfig = {
     key: 'root',
     storage: storage,
     whitelist: ['user', 'socket', 'notification'],

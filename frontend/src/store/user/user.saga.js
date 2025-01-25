@@ -3,8 +3,9 @@ import USER_ACTION_TYPES from "./user.types";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/api-requests/axios.utils";
 import { fetchSuggestedUsersFailed, fetchSuggestedUsersSuccess, loginUserFailed, loginUserSuccess, logoutUserFailed, logoutUserSuccess, sendFollowRequestFailed, sendFollowRequestSuccess, sendUnfollowRequestFailed, sendUnfollowRequestSuccess, signupUserFailed, signupUserSuccess } from "./user.action";
 import { toast } from "sonner";
-import { emptyFeedPosts } from "../post/post.action";
 import { socketConnect, socketDisconnect } from "../socket/socket.action";
+import { purgeStoredState } from "redux-persist";
+import { persistConfig } from "../store";
 
 export function* signupUser(action) {
     const {username, email, password, navigate} = action.payload
@@ -35,13 +36,15 @@ export function* loginUser(action) {
     }
 }
 
-export function* logoutUser() {
+export function* logoutUser(action) {
+    const navigate = action.payload;
     try {
         const res = yield call(sendAxiosGet, "user/logout");
         if(res && res.data.success) {
             yield put(logoutUserSuccess());
-            yield put(emptyFeedPosts());
             yield put(socketDisconnect());
+            yield call(() => navigate('/login'));
+            yield call(purgeStoredState, persistConfig);
             toast.success(res.data.message);
         }
     } catch (error) {
