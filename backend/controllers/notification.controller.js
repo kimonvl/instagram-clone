@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import FollowNotification from "../models/followNotification.model.js";
+import CommentNotification from "../models/commentNotification.model.js";
 import LikeNotification from "../models/likeNotification.model.js";
 import { getRecieverSocketId, io } from "../socket/socket.js";
+import FollowNotification from "../models/followNotification.model.js";
 
 export const markAsSeenNotifications = async (req, res) => {
     const notificationIds = req.body;
@@ -169,7 +170,7 @@ export const createFollowNotification = async (senderId, recieverId) => {
     try {
         console.log("creating notification with recieverId: ", recieverId);
         recieverId = new mongoose.Types.ObjectId(recieverId.toString());
-        const followNotification = await FollowNotification.create({ senderId, receiverId: recieverId});
+        const followNotification = await FollowNotification.create({ senderId, receiverId: recieverId });
 
         if (followNotification) {
             // Populate sender details if needed
@@ -197,6 +198,49 @@ export const createFollowNotification = async (senderId, recieverId) => {
 export const deleteFollowNotification = async (senderId, receiverId) => {
     try {
         const deleted = await FollowNotification.findOneAndDelete({ senderId, receiverId });
+
+        if (deleted) {
+            console.log('Notification deleted:', deleted);
+        } else {
+            console.log('Notification not found');
+        }
+    } catch (error) {
+
+    }
+}
+
+export const createCommentNotification = async (userId, receiverId, commentId) => {
+    try {
+        const commentNotification = await CommentNotification.create({ senderId: userId, receiverId, commentId});
+        console.log("comment notification",commentNotification)
+        if (commentNotification) {
+            // Populate sender details if needed
+            const populatedNotification = await CommentNotification.findById(commentNotification._id).populate(
+                'senderId',
+                'username profilePicture'
+            );
+
+            console.log("Comment notification created")
+
+            // Check if the receiver is online
+            const receiverSocketId = getRecieverSocketId(receiverId.toString());
+            if (receiverSocketId) {
+                // Emit the notification directly as the populated object
+                io.to(receiverSocketId).emit("newNotification", populatedNotification.toObject());
+            } else {
+                console.log("Receiver is not online, notification stored in DB");
+            }
+        } else {
+            console.log("Failed to create and send notification");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteCommentNotification = async (senderId, receiverId) => {
+    try {
+        const deleted = await CommentNotification.findOneAndDelete({ senderId, receiverId });
 
         if (deleted) {
             console.log('Notification deleted:', deleted);

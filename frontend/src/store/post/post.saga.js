@@ -11,11 +11,11 @@ export function* fetchFeedPosts() {
         const res = yield call(sendAxiosPostJson, "post/getallposts");
         if(res && res.data.success) {
             yield put(fetchFeedPostsSuccess(res.data.posts));
-            toast.success("Feed loaded");
+            toast.success(res.data.message);
         }
     } catch (error) {
-        yield put(fetchFeedPostsFailed(error.response.data.message));
-        toast.error("Feed failed to load");
+        yield put(fetchFeedPostsFailed(error));
+        toast.error(error.response.data.message);
     }
 }
 
@@ -26,11 +26,11 @@ export function* createPost(action) {
             yield put(addPostToUser(res.data.post));
             yield put(createPostSuccess());
             action.payload.setOpen(false);
-            toast.success("Post created");
+            toast.success(res.data.message);
         }
     } catch (error) {
-        yield put(createPostFailed(error.response.data.message));
-        toast.error("Failed to create post");
+        yield put(createPostFailed(error));
+        toast.error(error.response.data.message);
     }
 }
 
@@ -38,14 +38,14 @@ export function* dislikePost(action) {
     const currentUser = yield select(selectCurrentUser);
     const postId = action.payload
     try {
-        const res = yield sendAxiosPostJson(`post/dislikepost/${postId}`);
+        const res = yield call(sendAxiosPostJson, `post/dislikepost/${postId}`);
         if(res && res.data.success) {
             yield put(dislikePostSuccess(postId, currentUser._id));
-            toast.success("Post disliked");
+            toast.success(res.data.message);
         }
     } catch (error) {
-        yield put(dislikePostFailed(error.response.data.message));
-        toast.error("Failed to dislike post");
+        yield put(dislikePostFailed(error));
+        toast.error(error.response.data.message);
     }
 }
 
@@ -53,14 +53,14 @@ export function* likePost(action) {
     const currentUser = yield select(selectCurrentUser);
     const postId = action.payload
     try {
-        const res = yield sendAxiosPostJson(`post/likepost/${postId}`);
+        const res = yield call(sendAxiosPostJson, `post/likepost/${postId}`);
         if(res && res.data.success) {
             yield put(likePostSuccess(postId, currentUser._id));
-            toast.success("Post liked");
+            toast.success(res.data.message);
         }
     } catch (error) {
-        yield put(likePostFailed(error.response.data.message));
-        toast.error("Failed to like post");
+        yield put(likePostFailed(error));
+        toast.error(error.response.data.message);
     }
 }
 

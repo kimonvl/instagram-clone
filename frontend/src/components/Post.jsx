@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from '@/store/user/user.selector'
 import { dislikePostStart, likePostStart } from '@/store/post/post.action'
 import { useNavigate } from 'react-router-dom'
+import { createCommentStart } from '@/store/comment/comment.action'
 
 const Post = ({post}) => {
     const user = useSelector(selectCurrentUser);
@@ -28,6 +29,11 @@ const Post = ({post}) => {
     const postId = post?._id
  
     const [liked, setLiked] = useState(post.likes.includes(user?._id) ? true : false);
+    const [commentText, setCommentText] = useState('');
+
+    const handleChangeCommentText = (e) => {
+        setCommentText(e.target.value);
+    }
 
     const likeOrDislikeHandler = () => {
         if(liked) {
@@ -36,6 +42,12 @@ const Post = ({post}) => {
         } else {
             dispatch(likePostStart(postId));
             setLiked(true);
+        }
+    }
+
+    const createCommentHandler = () => {
+        if(commentText) {
+            dispatch(createCommentStart(postId, commentText));
         }
     }
 
@@ -98,9 +110,11 @@ const Post = ({post}) => {
                 <input
                     type="text"
                     placeholder='Add a comment...'
+                    value={commentText}
+                    onChange={handleChangeCommentText}
                     className='outline-none text-sm w-full'
                 />
-                <span className='text-[#3BADF8] cursor-pointer'>Post</span>
+                <span onClick={createCommentHandler} className={`text-[#3BADF8] cursor-pointer ${commentText ? '' : 'hidden'}`}>Send</span>
 
             </div>
         </div>

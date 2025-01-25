@@ -4,7 +4,7 @@ import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from "../models/comment.model.js";
 import LikeNotification from "../models/likeNotification.model.js";
-import { createLikeNotification, deleteLikeNotification } from "./notification.controller.js";
+import { createCommentNotification, createLikeNotification, deleteCommentNotification, deleteLikeNotification } from "./notification.controller.js";
 
 export const addNewPost = async (req, res) => {
     try {
@@ -250,6 +250,8 @@ export const createComment = async (req, res) => {
             });
         }
 
+        await createCommentNotification(userId, post._id, comment._id);
+
         return res.status(200).json({
             message: "Comment created successfully",
             success: true,
@@ -291,6 +293,8 @@ export const deleteComment = async (req, res) => {
 
         //delete comment
         await comment.deleteOne();
+
+        await deleteCommentNotification(userId, post.author);
 
         return res.status(200).json({
             message: "Comment deleted successfully",
