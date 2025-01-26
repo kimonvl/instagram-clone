@@ -10,6 +10,7 @@ import { selectCurrentUser } from '@/store/user/user.selector'
 import { dislikePostStart, likePostStart } from '@/store/post/post.action'
 import { useNavigate } from 'react-router-dom'
 import { createCommentStart } from '@/store/comment/comment.action'
+import CommentDialog from './CommentDialog'
 
 const Post = ({post}) => {
     const user = useSelector(selectCurrentUser);
@@ -26,10 +27,16 @@ const Post = ({post}) => {
     const postImage = post.image;
     const postLikes = post.likes.length;
     const postCaption = post.caption;
-    const postId = post?._id
- 
+    const postId = post?._id;
+    const postComments = post?.comments;
+    
     const [liked, setLiked] = useState(post.likes.includes(user?._id) ? true : false);
     const [commentText, setCommentText] = useState('');
+    const [openCommentDialog, setOpenCommentDialog] = useState(false);
+
+    const handleOpenCommentDialog = () => {
+        setOpenCommentDialog(true);
+    }
 
     const handleChangeCommentText = (e) => {
         setCommentText(e.target.value);
@@ -48,6 +55,7 @@ const Post = ({post}) => {
     const createCommentHandler = () => {
         if(commentText) {
             dispatch(createCommentStart(postId, commentText));
+            setCommentText("");
         }
     }
 
@@ -73,6 +81,7 @@ const Post = ({post}) => {
                         <MoreHorizontal className='cursor-pointer' />
                     </DialogTrigger>
                     <DialogContent className="flex flex-col items-center text-sm text-center">
+                        <Button variant="ghost" className="cursot-pointer w-fit text-[#ED4956] font-bold">Add to favourites</Button>
                         <Button variant="ghost" className="cursot-pointer w-fit text-[#ED4956] font-bold">Unfollow</Button>
                         <Button variant="ghost" className="cursot-pointer w-fit">Delete</Button>
                     </DialogContent>
@@ -102,9 +111,13 @@ const Post = ({post}) => {
                 <span className='font-medium mr-2'>{postAuthorUsername}</span>
                 {postCaption}
             </p>
-            <span className='cursor-pointer text-sm text-gray-400'>
-                View All comments
-            </span>
+            {
+                postComments.length > 0 && (
+                    <span onClick={handleOpenCommentDialog} className='cursor-pointer text-sm text-gray-400'>View All {postComments.length} comments</span>
+                )
+            }
+
+            <CommentDialog openCommentDialog={openCommentDialog} setOpenCommentDialog={setOpenCommentDialog}/>
 
             <div className='flex items-center justify-between'>
                 <input

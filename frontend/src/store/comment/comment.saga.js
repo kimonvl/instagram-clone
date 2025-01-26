@@ -3,12 +3,14 @@ import COMMENT_ACTION_TYPES from "./comment.types";
 import { sendAxiosPostJson } from "@/utils/api-requests/axios.utils";
 import { createCommentFailed } from "./comment.action";
 import { toast } from "sonner";
+import { addCommentToPost } from "../post/post.action";
 
 export function* createComment(action) {
     try {
         const res = yield call(sendAxiosPostJson, `post/createcomment/${action.payload.postId}`, {text: action.payload.text});
         if(res && res.data.success) {
             //action on success
+            yield put(addCommentToPost(res.data.postId, res.data.commentId));
             toast.success(res.data.message);
         }
     } catch (error) {

@@ -8,7 +8,7 @@ const POST_INITIAL_STATE = {
 }
 
 export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
-    const {type, payload} = action;
+    const { type, payload } = action;
 
     switch (type) {
         case POST_ACTION_TYPES.FETCH_FEED_POSTS_SUCCESS:
@@ -42,21 +42,55 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
                 loadingCreatePost: false,
                 error: payload
             }
-            case POST_ACTION_TYPES.DISLIKE_POST:
-                return {
-                    ...state,
-                    feedPosts: state.feedPosts.map(post => 
-                        post.id === payload.postId 
-                            ? {
-                                ...post,
-                                likes: post.likes.filter(userId => userId !== payload.userId)
-                            }
-                            : post
-                    ),
-                };
-            case USER_ACTION_TYPES.LOGOUT_SUCCESS:
-                return POST_INITIAL_STATE;
-    
+        case POST_ACTION_TYPES.DISLIKE_POST_SUCCESS:
+            return {
+                ...state,
+                feedPosts: state.feedPosts.map(post =>
+                    post._id === payload.postId
+                        ? {
+                            ...post,
+                            likes: post.likes.filter(userId => userId !== payload.userId)
+                        }
+                        : post
+                ),
+            };
+        case POST_ACTION_TYPES.LIKE_POST_SUCCESS:
+            return {
+                ...state,
+                feedPosts: state.feedPosts.map(post =>
+                    post._id === payload.postId
+                        ? {
+                            ...post,
+                            likes: post.likes.includes(payload.userId)
+                                ? post.likes
+                                : [...post.likes, payload.userId]
+                        }
+                        : post
+                ),
+            };
+        case POST_ACTION_TYPES.LIKE_POST_FAILED:
+        case POST_ACTION_TYPES.DISLIKE_POST_FAILED:
+            return {
+                ...state,
+                error: payload
+            }
+        case POST_ACTION_TYPES.ADD_COMMENT_TO_POST:
+            return {
+                ...state,
+                feedPosts: state.feedPosts.map(post => {
+                    return post._id === payload.postId ?
+                        {
+                            ...post,
+                            comments: post.comments.includes(payload.commentId) ?
+                                post.comments :
+                                [...post.comments, payload.commentId]
+                        } :
+                        post
+                })
+            }
+        case USER_ACTION_TYPES.LOGOUT_SUCCESS:
+            return POST_INITIAL_STATE;
+
         default:
             return state;
     }

@@ -55,7 +55,7 @@ export const getAllPosts = async (req, res) => {
                 success: false,
             })
         }
-        const posts = await Post.find({ author: { $in: user.following } }).populate("author", "username profilePicture").limit(20).sort({ createdAt: -1 });
+        const posts = await Post.find({ author: { $in: user.following } }).populate("author", "username profilePicture").limit(20).sort({ createdAt: 1 });
         if (!posts) {
             return res.status(400).json({
                 message: "Didn't find any posts",
@@ -255,6 +255,8 @@ export const createComment = async (req, res) => {
         return res.status(200).json({
             message: "Comment created successfully",
             success: true,
+            postId: post._id,
+            commentId: comment._id,
         });
     } catch (error) {
         console.log(error);

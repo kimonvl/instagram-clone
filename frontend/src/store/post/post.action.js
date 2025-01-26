@@ -52,3 +52,7 @@ export const likePostSuccess = (postId, userId) => {
 export const likePostFailed = (error) => {
     return createAction(POST_ACTION_TYPES.LIKE_POST_FAILED, error);
 }
+
+export const addCommentToPost = (postId, commentId) => {
+    return createAction(POST_ACTION_TYPES.ADD_COMMENT_TO_POST, {postId, commentId});
+}
