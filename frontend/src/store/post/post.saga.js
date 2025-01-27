@@ -1,7 +1,7 @@
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
 import POST_ACTION_TYPES from "./post.types";
 import { sendAxiosPostFormData, sendAxiosPostJson } from "@/utils/api-requests/axios.utils";
-import { createPostFailed, createPostSuccess, dislikePostFailed, dislikePostSuccess, fetchFeedPostsFailed, fetchFeedPostsSuccess, likePostFailed, likePostSuccess } from "./post.action";
+import { createPostFailed, createPostSuccess, dislikePostFailed, dislikePostSuccess, fetchFeedPostsFailed, fetchFeedPostsSuccess, fetchSelectedPostFailed, fetchSelectedPostSuccess, likePostFailed, likePostSuccess } from "./post.action";
 import { toast } from "sonner";
 import { addPostToUser } from "../user/user.action";
 import { selectCurrentUser } from "../user/user.selector";
@@ -50,9 +50,9 @@ export function* dislikePost(action) {
 }
 
 export function* likePost(action) {
-    const currentUser = yield select(selectCurrentUser);
-    const postId = action.payload
     try {
+        const currentUser = yield select(selectCurrentUser);
+        const postId = action.payload
         const res = yield call(sendAxiosPostJson, `post/likepost/${postId}`);
         if(res && res.data.success) {
             yield put(likePostSuccess(postId, currentUser._id));
@@ -60,6 +60,20 @@ export function* likePost(action) {
         }
     } catch (error) {
         yield put(likePostFailed(error));
+        toast.error(error.response.data.message);
+    }
+}
+
+export function* fetchSelectedPost(action) {
+    try {
+        const postId = action.payload;
+        const res = yield call(sendAxiosPostJson, `post/getfullpost/${postId}`);
+        if(res && res.data.success) {
+            yield put(fetchSelectedPostSuccess(res.data.fullPost));
+            toast.success(res.data.message);
+        } 
+    } catch (error) {
+        yield put(fetchSelectedPostFailed(error));
         toast.error(error.response.data.message);
     }
 }
@@ -80,6 +94,12 @@ export function* onLikePostStart() {
     yield takeLatest(POST_ACTION_TYPES.LIKE_POST_START, likePost);
 }
 
+export function* onFetchSelectedPostStart() {
+    yield takeLatest(POST_ACTION_TYPES.FETCH_SELECTED_POST_START, fetchSelectedPost);
+}
+
+
+
 export function* postSagas() {
-    yield all([call(onFetchFeedPostsStart), call(onCreatePostStart), call(onDislikePostStart), call(onLikePostStart)]);
+    yield all([call(onFetchFeedPostsStart), call(onCreatePostStart), call(onDislikePostStart), call(onLikePostStart), call(onFetchSelectedPostStart)]);
 }

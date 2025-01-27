@@ -7,16 +7,16 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { Badge } from './ui/badge'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from '@/store/user/user.selector'
-import { dislikePostStart, likePostStart } from '@/store/post/post.action'
+import { dislikePostStart, fetchSelectedPostStart, likePostStart } from '@/store/post/post.action'
 import { useNavigate } from 'react-router-dom'
 import { createCommentStart } from '@/store/comment/comment.action'
 import CommentDialog from './CommentDialog'
 
-const Post = ({post}) => {
+const Post = ({ post }) => {
     const user = useSelector(selectCurrentUser);
     const navigate = useNavigate()
     useEffect(() => {
-        if(!user){
+        if (!user) {
             navigate("/login");
         }
     }, [])
@@ -29,12 +29,13 @@ const Post = ({post}) => {
     const postCaption = post.caption;
     const postId = post?._id;
     const postComments = post?.comments;
-    
+
     const [liked, setLiked] = useState(post.likes.includes(user?._id) ? true : false);
     const [commentText, setCommentText] = useState('');
     const [openCommentDialog, setOpenCommentDialog] = useState(false);
 
     const handleOpenCommentDialog = () => {
+        dispatch(fetchSelectedPostStart(postId));
         setOpenCommentDialog(true);
     }
 
@@ -43,7 +44,7 @@ const Post = ({post}) => {
     }
 
     const likeOrDislikeHandler = () => {
-        if(liked) {
+        if (liked) {
             dispatch(dislikePostStart(postId));
             setLiked(false);
         } else {
@@ -53,8 +54,8 @@ const Post = ({post}) => {
     }
 
     const createCommentHandler = () => {
-        if(commentText) {
-            dispatch(createCommentStart(postId, commentText));
+        if (commentText) {
+            dispatch(createCommentStart(postId, commentText, false));
             setCommentText("");
         }
     }
@@ -72,7 +73,7 @@ const Post = ({post}) => {
                         {
                             user && user.username == postAuthorUsername && <Badge variant="secondary">Author</Badge>
                         }
-                        
+
                     </div>
                 </div>
 
@@ -99,12 +100,13 @@ const Post = ({post}) => {
                         liked ? <FaHeart onClick={likeOrDislikeHandler} size={'24'} className='cursor-pointer text-red-600' /> : <FaRegHeart onClick={likeOrDislikeHandler} size={'22px'} className='cursor-pointer hover:text-gray-600' />
                     }
 
-                    <MessageCircle 
-                    className='cursor-pointer hover:text-gray-600'
+                    <MessageCircle
+                        onClick={handleOpenCommentDialog}
+                        className='cursor-pointer hover:text-gray-600'
                     />
-                    <Send className='cursor-pointer hover:text-gray-600'/>
+                    <Send className='cursor-pointer hover:text-gray-600' />
                 </div>
-                <Bookmark className='cursor-pointer hover:text-gray-600'/>
+                <Bookmark className='cursor-pointer hover:text-gray-600' />
             </div>
             <span className='font-medium block mb-2'>{`${postLikes} Likes`} </span>
             <p>
@@ -117,7 +119,7 @@ const Post = ({post}) => {
                 )
             }
 
-            <CommentDialog openCommentDialog={openCommentDialog} setOpenCommentDialog={setOpenCommentDialog}/>
+            <CommentDialog openCommentDialog={openCommentDialog} setOpenCommentDialog={setOpenCommentDialog} />
 
             <div className='flex items-center justify-between'>
                 <input

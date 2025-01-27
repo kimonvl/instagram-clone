@@ -4,6 +4,8 @@ import POST_ACTION_TYPES from "./post.types";
 const POST_INITIAL_STATE = {
     feedPosts: [],
     loadingCreatePost: false,
+    selectedPost: null,
+    loadingSelectedPost: false,
     error: null,
 }
 
@@ -88,6 +90,32 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
                         post
                 })
             }
+        case POST_ACTION_TYPES.ADD_COMMENT_TO_FULL_POST:
+            return {
+                ...state,
+                selectedPost: payload.postId == state.selectedPost?._id ?  {
+                    ...state.selectedPost,
+                    comments: [...state.selectedPost.comments, payload.comment]
+                } :
+                selectedPost,
+            }
+        case POST_ACTION_TYPES.FETCH_SELECTED_POST_START:
+            return {
+                ...state,
+                loadingSelectedPost: true,
+            };
+        case POST_ACTION_TYPES.FETCH_SELECTED_POST_SUCCES:
+            return {
+                ...state,
+                selectedPost: payload,
+                loadingSelectedPost: false,
+            };
+        case POST_ACTION_TYPES.FETCH_SELECTED_POST_FAILED:
+            return {
+                ...state,
+                loadingSelectedPost: false,
+                error: payload,
+            };
         case USER_ACTION_TYPES.LOGOUT_SUCCESS:
             return POST_INITIAL_STATE;
 

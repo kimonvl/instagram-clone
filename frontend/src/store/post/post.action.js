@@ -56,3 +56,17 @@ export const likePostFailed = (error) => {
 export const addCommentToPost = (postId, commentId) => {
     return createAction(POST_ACTION_TYPES.ADD_COMMENT_TO_POST, {postId, commentId});
 }
+
+export const addCommentToFullPost = (postId, comment) => {
+    return createAction(POST_ACTION_TYPES.ADD_COMMENT_TO_FULL_POST, {postId, comment});
+}
+
+export const fetchSelectedPostStart = (postId) => {
+    return createAction(POST_ACTION_TYPES.FETCH_SELECTED_POST_START, postId);
+}
+export const fetchSelectedPostSuccess = (post) => {
+    return createAction(POST_ACTION_TYPES.FETCH_SELECTED_POST_SUCCES, post);
+}
+export const fetchSelectedPostFailed = (error) => {
+    return createAction(POST_ACTION_TYPES.FETCH_SELECTED_POST_FAILED, error);
+}

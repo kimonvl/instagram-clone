@@ -124,9 +124,16 @@ export const getFullPost = async (req, res) => {
         return res.status(200).json({
             fullPost,
             success: true,
+            message: "Post found"
         });
     } catch (error) {
         console.log(error);
+        if (!fullPost) {
+            return res.status(400).json({
+                message: "Can't fetch post",
+                success: false,
+            });
+        }
     }
 }
 
@@ -251,12 +258,12 @@ export const createComment = async (req, res) => {
         }
 
         await createCommentNotification(userId, post._id, comment._id);
-
+        await comment.populate('author', "username profilePicture");
         return res.status(200).json({
             message: "Comment created successfully",
             success: true,
             postId: post._id,
-            commentId: comment._id,
+            comment,
         });
     } catch (error) {
         console.log(error);
