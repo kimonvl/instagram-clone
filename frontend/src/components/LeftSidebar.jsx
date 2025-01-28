@@ -10,6 +10,7 @@ import { selectSeenNotifications, selectUnseenNotifications, selectUnseenNotific
 import { clearUnseenNotificationForView, fetchSeenNotificationsStart, markAsSeenNotificationStart } from '@/store/notification/notification.action';
 import FollowNotification from './FollowNotification';
 import { redirect, useNavigate } from 'react-router-dom';
+import CommentNotification from './CommentNotification';
 
 const LeftSidebar = () => {
     const [open, setOpen] = useState(false);
@@ -57,7 +58,7 @@ const LeftSidebar = () => {
         }
         if (unseenNotification.length > 0) {
             dispatch(markAsSeenNotificationStart());
-            
+
         }
     }
 
@@ -133,10 +134,12 @@ const LeftSidebar = () => {
                             <div className="flex flex-col gap-3">
                                 {
                                     unseenNotificationForView.map((notification) => {
-                                        if(notification.type == "like"){
+                                        if (notification.type == "like") {
                                             return (<LikeNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
-                                        } else if(notification.type == "follow") {
+                                        } else if (notification.type == "follow") {
                                             return (<FollowNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                        } else if (notification.type == "comment") {
+                                            return (<CommentNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
                                         }
                                     })
                                 }
@@ -147,10 +150,12 @@ const LeftSidebar = () => {
                             <div className="flex flex-col gap-3">
                                 {
                                     seenNotifications.map((notification) => {
-                                        if(notification.type == "like"){
+                                        if (notification.type == "like") {
                                             return (<LikeNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
-                                        } else if(notification.type == "follow") {
+                                        } else if (notification.type == "follow") {
                                             return (<FollowNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                        } else if (notification.type == "comment") {
+                                            return (<CommentNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
                                         }
                                     })
                                 }

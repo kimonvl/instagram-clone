@@ -21,3 +21,14 @@ export const editCommentFailed = (error) => {
     return createAction(COMMENT_ACTION_TYPES.EDIT_COMMENT_FAILED, error);
 }
 
+export const deleteCommentStart = (postId, commentId) => {
+    return createAction(COMMENT_ACTION_TYPES.DELETE_COMMENT_START, {postId, commentId});
+}
+
+export const deleteCommentSuccess = () => {
+    return createAction(COMMENT_ACTION_TYPES.DELETE_COMMENT_SUCCESS);
+}
+
+export const deleteCommentFailed = (error) => {
+    return createAction(COMMENT_ACTION_TYPES.DELETE_COMMENT_FAILED, error);
+}

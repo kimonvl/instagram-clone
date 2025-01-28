@@ -257,7 +257,7 @@ export const createComment = async (req, res) => {
             });
         }
 
-        await createCommentNotification(userId, post._id, comment._id);
+        await createCommentNotification(userId, post.author, comment._id);
         await comment.populate('author', "username profilePicture");
         return res.status(200).json({
             message: "Comment created successfully",
@@ -312,6 +312,10 @@ export const deleteComment = async (req, res) => {
 
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            message: "Failed to delete",
+            success: false,
+        });
     }
 }
 

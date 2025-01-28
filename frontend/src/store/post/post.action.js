@@ -65,6 +65,10 @@ export const editCommentToPost = (postId, commentId, text) => {
     return createAction(POST_ACTION_TYPES.EDIT_COMMENT_TO_POST, { postId, commentId, text });
 }
 
+export const removeCommentFromPost = (postId, commentId) => {
+    return createAction(POST_ACTION_TYPES.REMOVE_COMENT_FROM_POST, { postId, commentId });
+}
+
 export const fetchSelectedPostStart = (postId) => {
     return createAction(POST_ACTION_TYPES.FETCH_SELECTED_POST_START, postId);
 }

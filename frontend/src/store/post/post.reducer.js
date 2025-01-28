@@ -117,6 +117,21 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
                 } :
                 state.selectedPost,
             }
+        case POST_ACTION_TYPES.REMOVE_COMENT_FROM_POST:
+            return {
+                ...state,
+                selectedPost: payload.postId == state.selectedPost?._id ?  {
+                    ...state.selectedPost,
+                    comments: state.selectedPost.comments.filter(comment => comment._id != payload.commentId)
+                } :
+                state.selectedPost,
+                feedPosts: state.feedPosts.map((post) => {
+                    return post._id == payload.postId ? {
+                        ...post,
+                        comments: post.comments.filter(commentId => commentId != payload.commentId)
+                    } : post
+                })
+            }
         case POST_ACTION_TYPES.FETCH_SELECTED_POST_START:
             return {
                 ...state,

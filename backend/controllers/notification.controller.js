@@ -19,7 +19,12 @@ export const markAsSeenNotifications = async (req, res) => {
             { $set: { seen: true } }
         );
 
-        if ((resultLike || resultFollow) && (resultLike.acknowledged || resultFollow.acknowledged)) {
+        const resultComment = await CommentNotification.updateMany(
+            { _id: { $in: notificationIds } },
+            { $set: { seen: true } }
+        );
+
+        if ((resultLike || resultFollow || resultComment) && (resultLike.acknowledged || resultFollow.acknowledged || resultComment.acknowledged)) {
             return res.status(200).json({
                 message: "Notifications marked as seen",
                 success: true,
@@ -53,8 +58,13 @@ export const getOfflineUnseenNotifications = async (req, res) => {
             'username profilePicture'
         );
 
+        const commentNotifications = await CommentNotification.find({ receiverId: recieverId, seen: false }).populate(
+            'senderId',
+            'username profilePicture'
+        );
+
         // Merge the two arrays
-        const allNotifications = [...likeNotifications, ...followNotifications];
+        const allNotifications = [...likeNotifications, ...followNotifications, ...commentNotifications];
 
         // Sort the combined array by createdAt in descending order
         const notifications = allNotifications.sort((a, b) => b.createdAt - a.createdAt);
@@ -92,9 +102,13 @@ export const getSeenNotifications = async (req, res) => {
             'senderId',
             'username profilePicture'
         );
+        const commentNotifications = await CommentNotification.find({ receiverId: recieverId, seen: true }).populate(
+            'senderId',
+            'username profilePicture'
+        );
 
         // Merge the two arrays
-        const allNotifications = [...likeNotifications, ...followNotifications];
+        const allNotifications = [...likeNotifications, ...followNotifications, ...commentNotifications];
 
         // Sort the combined array by createdAt in descending order
         const notifications = allNotifications.sort((a, b) => b.createdAt - a.createdAt);
@@ -211,8 +225,8 @@ export const deleteFollowNotification = async (senderId, receiverId) => {
 
 export const createCommentNotification = async (userId, receiverId, commentId) => {
     try {
-        const commentNotification = await CommentNotification.create({ senderId: userId, receiverId, commentId});
-        console.log("comment notification",commentNotification)
+        const commentNotification = await CommentNotification.create({ senderId: userId, receiverId, commentId });
+        console.log("comment notification", commentNotification)
         if (commentNotification) {
             // Populate sender details if needed
             const populatedNotification = await CommentNotification.findById(commentNotification._id).populate(

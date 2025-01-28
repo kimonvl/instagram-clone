@@ -1,9 +1,9 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
 import COMMENT_ACTION_TYPES from "./comment.types";
 import { sendAxiosPostJson } from "@/utils/api-requests/axios.utils";
-import { createCommentFailed, editCommentFailed } from "./comment.action";
+import { createCommentFailed, deleteCommentFailed, editCommentFailed } from "./comment.action";
 import { toast } from "sonner";
-import { addCommentToFullPost, addCommentToPost, editCommentToPost } from "../post/post.action";
+import { addCommentToFullPost, addCommentToPost, editCommentToPost, removeCommentFromPost } from "../post/post.action";
 
 export function* createComment(action) {
     try {
@@ -18,6 +18,21 @@ export function* createComment(action) {
         }
     } catch (error) {
         yield put(createCommentFailed(error));
+        toast.error(error.response.message);
+    }
+}
+
+export function* deleteComment(action) {
+    try {
+        const {postId, commentId} = action.payload;
+        const res = yield call(sendAxiosPostJson, `post/deletecomment/${commentId}`);
+        if(res && res.data.success) {
+            //action on success
+            yield put(removeCommentFromPost(postId, commentId));
+            toast.success(res.data.message);
+        }
+    } catch (error) {
+        yield put(deleteCommentFailed(error));
         toast.error(error.response.message);
     }
 }
@@ -45,6 +60,10 @@ export function* onEditCommentStart() {
     yield takeLatest(COMMENT_ACTION_TYPES.EDIT_COMMENT_START, editComment);
 }
 
+export function* onDeleteCommentStart() {
+    yield takeLatest(COMMENT_ACTION_TYPES.DELETE_COMMENT_START, deleteComment);
+}
+
 export function* commentSagas() {
-    yield all([call(onCreateCommentStart), call(onEditCommentStart)]);
+    yield all([call(onCreateCommentStart), call(onEditCommentStart), call(onDeleteCommentStart)]);
 }
