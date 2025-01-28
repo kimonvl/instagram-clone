@@ -12,3 +12,12 @@ export const createCommentSuccess = () => {
 export const createCommentFailed = (error) => {
     return createAction(COMMENT_ACTION_TYPES.CREATE_COMMENT_FAILED, error);
 }
+
+export const editCommentStart = (postId, commentId, text) => {
+    return createAction(COMMENT_ACTION_TYPES.EDIT_COMMENT_START, {postId, commentId, text});
+}
+
+export const editCommentFailed = (error) => {
+    return createAction(COMMENT_ACTION_TYPES.EDIT_COMMENT_FAILED, error);
+}
+

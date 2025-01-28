@@ -99,6 +99,24 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
                 } :
                 selectedPost,
             }
+        case POST_ACTION_TYPES.EDIT_COMMENT_TO_POST:
+            return {
+                ...state,
+                selectedPost: payload.postId == state.selectedPost?._id ?  {
+                    ...state.selectedPost,
+                    comments: state.selectedPost.comments.map((comment) => {
+                        if(comment._id == payload.commentId){
+                            return {
+                                ...comment,
+                                text: payload.text,
+                            }
+                        }else {
+                            return comment;
+                        }
+                    })
+                } :
+                state.selectedPost,
+            }
         case POST_ACTION_TYPES.FETCH_SELECTED_POST_START:
             return {
                 ...state,

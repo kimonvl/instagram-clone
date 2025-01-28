@@ -54,11 +54,15 @@ export const likePostFailed = (error) => {
 }
 
 export const addCommentToPost = (postId, commentId) => {
-    return createAction(POST_ACTION_TYPES.ADD_COMMENT_TO_POST, {postId, commentId});
+    return createAction(POST_ACTION_TYPES.ADD_COMMENT_TO_POST, { postId, commentId });
 }
 
 export const addCommentToFullPost = (postId, comment) => {
-    return createAction(POST_ACTION_TYPES.ADD_COMMENT_TO_FULL_POST, {postId, comment});
+    return createAction(POST_ACTION_TYPES.ADD_COMMENT_TO_FULL_POST, { postId, comment });
+}
+
+export const editCommentToPost = (postId, commentId, text) => {
+    return createAction(POST_ACTION_TYPES.EDIT_COMMENT_TO_POST, { postId, commentId, text });
 }
 
 export const fetchSelectedPostStart = (postId) => {
