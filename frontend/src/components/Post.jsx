@@ -8,7 +8,7 @@ import { Badge } from './ui/badge'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from '@/store/user/user.selector'
 import { dislikePostStart, fetchSelectedPostStart, likePostStart } from '@/store/post/post.action'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { createCommentStart } from '@/store/comment/comment.action'
 import CommentDialog from './CommentDialog'
 
@@ -24,6 +24,7 @@ const Post = ({ post }) => {
     const dispatch = useDispatch();
     const postAuthorUsername = post.author.username;
     const postAuthorImage = post.author.profilePicture;
+    const postAuthorId = post.author._id;
     const postImage = post.image;
     const postLikes = post.likes.length;
     const postCaption = post.caption;
@@ -69,7 +70,9 @@ const Post = ({ post }) => {
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className='flex items-center gap-3'>
+                        <Link to={`profile/${postAuthorId}`}>
                         <h1>{postAuthorUsername}</h1>
+                        </Link>
                         {
                             user && user.username == postAuthorUsername && <Badge variant="secondary">Author</Badge>
                         }

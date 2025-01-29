@@ -35,8 +35,11 @@ const CreatePost = ({ open, setOpen }) => {
     const createPostHandler = () => {
         const formData = new FormData();
         formData.append("caption", caption);
-        if(imagePreview) formData.append("image", file);
+        if (imagePreview) formData.append("image", file);
         dispatch(createPostStart(formData, setOpen));
+        setCaption("");
+        setImagePreview("");
+        setFile("");
     }
 
     return (
@@ -61,7 +64,7 @@ const CreatePost = ({ open, setOpen }) => {
                         </div>
                     )
                 }
-                <input ref={imageRef} type="file" className='hidden' onChange={imageChangeHandler}/>
+                <input ref={imageRef} type="file" className='hidden' onChange={imageChangeHandler} />
                 <Button onClick={() => imageRef.current.click()} className="w-fit mx-auto bg-[#0095F6] hover:bg-[#258bcf]">Select from computer</Button>
                 {
                     imagePreview && (

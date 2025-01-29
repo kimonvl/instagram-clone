@@ -67,6 +67,7 @@ export const getOfflineUnseenNotifications = async (req, res) => {
         const allNotifications = [...likeNotifications, ...followNotifications, ...commentNotifications];
 
         // Sort the combined array by createdAt in descending order
+        // @ts-ignore
         const notifications = allNotifications.sort((a, b) => b.createdAt - a.createdAt);
 
         if (notifications.length == 0) {
@@ -111,6 +112,7 @@ export const getSeenNotifications = async (req, res) => {
         const allNotifications = [...likeNotifications, ...followNotifications, ...commentNotifications];
 
         // Sort the combined array by createdAt in descending order
+        // @ts-ignore
         const notifications = allNotifications.sort((a, b) => b.createdAt - a.createdAt);
 
         if (notifications.length == 0) {

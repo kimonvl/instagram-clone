@@ -21,3 +21,8 @@ export const selectSuggestedUsers = createSelector(
     [selectUserReducer],
     (userSlice) => userSlice.suggestedUsers
 )
+
+export const selectSelectedProfile = createSelector(
+    [selectUserReducer],
+    (userSlice) => userSlice.selectedProfile
+)

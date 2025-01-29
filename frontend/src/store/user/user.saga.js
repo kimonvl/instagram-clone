@@ -1,7 +1,7 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
 import USER_ACTION_TYPES from "./user.types";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/api-requests/axios.utils";
-import { fetchSuggestedUsersFailed, fetchSuggestedUsersSuccess, loginUserFailed, loginUserSuccess, logoutUserFailed, logoutUserSuccess, sendFollowRequestFailed, sendFollowRequestSuccess, sendUnfollowRequestFailed, sendUnfollowRequestSuccess, signupUserFailed, signupUserSuccess } from "./user.action";
+import { fetchSelectedProfileFailed, fetchSelectedProfileSuccess, fetchSuggestedUsersFailed, fetchSuggestedUsersSuccess, loginUserFailed, loginUserSuccess, logoutUserFailed, logoutUserSuccess, sendFollowRequestFailed, sendFollowRequestSuccess, sendUnfollowRequestFailed, sendUnfollowRequestSuccess, signupUserFailed, signupUserSuccess } from "./user.action";
 import { toast } from "sonner";
 import { socketConnect, socketDisconnect } from "../socket/socket.action";
 import { purgeStoredState } from "redux-persist";
@@ -94,6 +94,20 @@ export function* unfollowUser(action) {
     }
 }
 
+export function* getSelectedProfile(action) {
+    try {
+        const userId = action.payload;
+        const res = yield call(sendAxiosGet, `user/profile/${userId}`)
+        if(res && res.data.success) {
+            yield put(fetchSelectedProfileSuccess(res.data.user));
+            toast.success(res.data.message);
+        }
+    } catch (error) {
+        yield put(fetchSelectedProfileFailed(error));
+        toast.error(error.response.data.message);
+    }
+}
+
 export function* onSignupUserStart() {
     yield takeLatest(USER_ACTION_TYPES.SIGNUP_START, signupUser);
 }
@@ -118,6 +132,10 @@ export function* onUnfollowUserStart() {
     yield takeLatest(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_START, unfollowUser);
 }
 
+export function* onFetchSelectedProfileStart() {
+    yield takeLatest(USER_ACTION_TYPES.FETCH_SELECTED_PROFILE_START, getSelectedProfile);
+}
+
 export function* userSagas() {
-    yield all([call(onSignupUserStart), call(onLoginUserStart), call(onLogoutUserStart), call(onFetchSuggestedUsersStart), call(onFollowUserStart), call(onUnfollowUserStart)]);
+    yield all([call(onSignupUserStart), call(onLoginUserStart), call(onLogoutUserStart), call(onFetchSuggestedUsersStart), call(onFollowUserStart), call(onUnfollowUserStart), call(onFetchSelectedProfileStart)]);
 }

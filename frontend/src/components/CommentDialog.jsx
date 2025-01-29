@@ -39,7 +39,7 @@ const CommentDialog = ({ openCommentDialog, setOpenCommentDialog }) => {
 
 
     return (
-        <Dialog open={openCommentDialog}>
+        <Dialog  open={openCommentDialog}>
             <DialogContent onInteractOutside={() => setOpenCommentDialog(false)} className="max-w-5xl p-0 flex flex-col">
                 <div className='flex flex-1'>
                     <div className='w-1/2'>

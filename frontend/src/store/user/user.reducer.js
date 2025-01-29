@@ -4,6 +4,7 @@ import USER_ACTION_TYPES from "./user.types";
 const USER_INITIAL_STATE = {
     currentUser: null,
     suggestedUsers: [],
+    selectedProfile: null,
     isLoading: false,
     navigateToHome: false,
     error: null
@@ -95,6 +96,23 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 error: payload
+            }
+        case USER_ACTION_TYPES.FETCH_SELECTED_PROFILE_START:
+            return {
+                ...state,
+                isLoading: true,
+            }
+        case USER_ACTION_TYPES.FETCH_SELECTED_PROFILE_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                selectedProfile: payload,
+            }
+        case USER_ACTION_TYPES.FETCH_SELECTED_PROFILE_FAILED:
+            return {
+                ...state,
+                isLoading: false,
+                error: payload,
             }
         case USER_ACTION_TYPES.ADD_POST_TO_USER:
             return {

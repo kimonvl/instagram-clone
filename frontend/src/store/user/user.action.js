@@ -72,6 +72,19 @@ export const sendUnfollowRequestFailed = (error) => {
     return createAction(USER_ACTION_TYPES.SEND_UNFOLLOW_REQUEST_FAILED, error);
 }
 
+export const fetchSelectedProfileStart = (userId) => {
+    return createAction(USER_ACTION_TYPES.FETCH_SELECTED_PROFILE_START, userId);
+}
+
+export const fetchSelectedProfileSuccess = (userProfile) => {
+    return createAction(USER_ACTION_TYPES.FETCH_SELECTED_PROFILE_SUCCESS, userProfile);
+}
+
+export const fetchSelectedProfileFailed = (error) => {
+    return createAction(USER_ACTION_TYPES.FETCH_SELECTED_PROFILE_FAILED, error);
+}
+
+
 export const addPostToUser = (post) => {
     return createAction(USER_ACTION_TYPES.ADD_POST_TO_USER, post);
 }
