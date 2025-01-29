@@ -89,8 +89,9 @@ const LeftSidebar = () => {
             className={`fixed top-0 z-10 border-r border-gray-300 h-screen flex transition-all duration-300 ease-in-out ${notificationOpen ? 'w-[16%]' : 'w-[16%]'
                 }`}
         >
-            {/* Icons Section */}
+            {/* Icons Section */}{/* add when chat is open similar to notifications*/}
             <div
+            
                 className={`flex flex-col transition-all duration-300 ease-in-out ${notificationOpen ? 'w-1/3' : 'w-full'
                     } px-4`}
             >

@@ -12,6 +12,11 @@ export const selectLoadingCreatePost = createSelector(
     (postSlice) => postSlice.loadingCreatePost
 );
 
+export const selectLoadingEditPost = createSelector(
+    [selectPostReducer],
+    (postSlice) => postSlice.loadingEditPost
+);
+
 export const selectSelectedPost = createSelector(
     [selectPostReducer],
     (postSlice) => postSlice.selectedPost

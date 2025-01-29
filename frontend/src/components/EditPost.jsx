@@ -1,25 +1,35 @@
-import React, { useRef } from 'react'
-import { Dialog, DialogContent, DialogHeader } from './ui/dialog'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Textarea } from './ui/textarea'
-import { Button } from './ui/button'
-import { Loader2 } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectCurrentUser } from '@/store/user/user.selector'
-import { useState } from 'react'
-import { createPostStart } from '@/store/post/post.action'
-import { selectLoadingCreatePost } from '@/store/post/post.selector'
+import { Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
+import { Textarea } from "./ui/textarea";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/user/user.selector";
+import { useEffect, useRef, useState } from "react";
+import { selectLoadingEditPost } from "@/store/post/post.selector";
+import { editPostStart } from "@/store/post/post.action";
 
-const CreatePost = ({ open, setOpen }) => {
-    const currentUser = useSelector(selectCurrentUser);
+const EditPost = ({ editPostOpen, setEditPostOpen, post }) => {
     const dispatch = useDispatch();
     const imageRef = useRef();
+console.log("edit post: ", post);
+    const currentUser = useSelector(selectCurrentUser);
+    //creting loading state for edit post
+    const loading = useSelector(selectLoadingEditPost);
 
+    // States for caption and image
     const [caption, setCaption] = useState("");
     const [imagePreview, setImagePreview] = useState("");
     const [file, setFile] = useState("");
-    //replace the loading with redux state var
-    const loading = useSelector(selectLoadingCreatePost);
+
+    // Update state whenever `post` changes
+    useEffect(() => {
+        if (post) {
+            setCaption(post.caption || "");
+            setImagePreview(post.image || "");
+        }
+    }, [post]);
+
     const imageChangeHandler = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -32,17 +42,17 @@ const CreatePost = ({ open, setOpen }) => {
         }
     };
 
-    const createPostHandler = () => {
+    const editPostHandler = () => {
         const formData = new FormData();
         formData.append("caption", caption);
         if (imagePreview) formData.append("image", file);
-        dispatch(createPostStart(formData, setOpen, setCaption, setImagePreview, setFile));
+        dispatch(editPostStart(post?._id, formData, setEditPostOpen));
+        
     }
-
     return (
-        <Dialog open={open}>
-            <DialogContent onInteractOutside={() => setOpen(false)}>
-                <DialogHeader className="text-center font-semibold">Create new post</DialogHeader>
+        <Dialog open={editPostOpen}>
+            <DialogContent onInteractOutside={() => setEditPostOpen(false)}>
+                <DialogHeader className="text-center font-semibold">Edit post</DialogHeader>
                 <div className='flex items-center gap-3'>
                     <Avatar>
                         <AvatarImage src={currentUser?.profilePicture} alt="img" />
@@ -53,7 +63,7 @@ const CreatePost = ({ open, setOpen }) => {
                         <span className='text-gray-600 text-xs'>{currentUser?.bio}</span>
                     </div>
                 </div>
-                <Textarea value={caption} onChange={(e) => setCaption(e.target.value)} className="focus-visible:ring-transparent border-none" placeholder="Write your caption here ..." />
+                <Textarea value={caption} onChange={(e) => setCaption(e.target.value)} className="focus-visible:ring-transparent border-none" />
                 {
                     imagePreview && (
                         <div className='w-full h-64 items-center justify-center'>
@@ -71,7 +81,7 @@ const CreatePost = ({ open, setOpen }) => {
                                 Please wait
                             </Button>
                         ) : (
-                            <Button onClick={createPostHandler}>Post</Button>
+                            <Button onClick={editPostHandler}>Edit</Button>
                         )
                     )
                 }
@@ -80,4 +90,4 @@ const CreatePost = ({ open, setOpen }) => {
     )
 }
 
-export default CreatePost
+export default EditPost;

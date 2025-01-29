@@ -1,3 +1,4 @@
+// @ts-nocheck
 import sharp from "sharp";
 import cloudinary from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
@@ -227,6 +228,10 @@ export const editPost = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            message: "Error during edit post",
+            success: false,
+        });
     }
 }
 

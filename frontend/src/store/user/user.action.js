@@ -89,6 +89,10 @@ export const addPostToUser = (post) => {
     return createAction(USER_ACTION_TYPES.ADD_POST_TO_USER, post);
 }
 
+export const editPostToUser = (post) => {
+    return createAction(USER_ACTION_TYPES.EDIT_POST_TO_USER, post);
+}
+
 export const removePostFromUser = (postId) => {
     return createAction(USER_ACTION_TYPES.REMOVE_POST_FROM_USER, postId);
 }

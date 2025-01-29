@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectSelectedPost } from '@/store/post/post.selector'
 import { createCommentStart, editCommentStart } from '@/store/comment/comment.action'
 import { selectCurrentUser } from '@/store/user/user.selector'
+import EditPost from './EditPost'
 
 const CommentDialog = ({ openCommentDialog, setOpenCommentDialog }) => {
     const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const CommentDialog = ({ openCommentDialog, setOpenCommentDialog }) => {
     const [commentText, setCommentText] = useState("");
     const [commentId, setCommentId] = useState("");
     const [editCommentFlag, setEditCommentFlag] = useState(false);
+    const [editPostOpen, setEditPostOpen] = useState(false);
 
     const handleCommentTextChange = (e) => {
         setCommentText(e.target.value);
@@ -70,11 +72,12 @@ const CommentDialog = ({ openCommentDialog, setOpenCommentDialog }) => {
                                 </DialogTrigger>
                                 <DialogContent className="flex flex-col items-center text-sm text-center">
                                     {
-                                        currentUser._id == selectedPost?.author ?
+                                        
+                                        currentUser._id == selectedPost?.author._id ?
                                             (
                                                 <div>
-                                                    <div className='cursor-pointer w-full text-[#ED4956] font-bold'>Edit</div>
-                                                    <div className='cursor-pointer w-full'>Delete</div>
+                                                    <div onClick={() => setEditPostOpen(true)} className='cursor-pointer w-full font-bold'>Edit</div>
+                                                    <div className='my-1 cursor-pointer text-[#ED4956] font-bold w-full'>Delete</div>
                                                 </div>
                                             ) :
                                             (
@@ -86,6 +89,7 @@ const CommentDialog = ({ openCommentDialog, setOpenCommentDialog }) => {
                                     }
                                 </DialogContent>
                             </Dialog>
+                            <EditPost editPostOpen={editPostOpen} setEditPostOpen={setEditPostOpen} post={selectedPost}/>
                         </div>
                         <div className='mb-2 px-4 w-full break-words'>{selectedPost?.caption}</div>
                         <hr />

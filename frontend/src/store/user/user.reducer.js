@@ -122,6 +122,16 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
                     posts: [...state.currentUser.posts, payload]
                 }
             }
+        case USER_ACTION_TYPES.EDIT_POST_TO_USER:
+            return {
+                ...state,
+                selectedProfile: state.selectedProfile ? {
+                    ...state.selectedProfile,
+                    posts: state.selectedProfile.posts.map((post) => {
+                        return post._id == payload._id ? payload : post;
+                    })
+                } : null
+            }
         case USER_ACTION_TYPES.REMOVE_POST_FROM_USER:
             return {
                 ...state,

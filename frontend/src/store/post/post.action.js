@@ -17,8 +17,8 @@ export const emptyFeedPosts = () => {
     return createAction(POST_ACTION_TYPES.EMPTY_FEED_POSTS);
 }
 
-export const createPostStart = (formData, setOpen) => {
-    return createAction(POST_ACTION_TYPES.CREATE_POST_START, { formData, setOpen });
+export const createPostStart = (formData, setOpen, setCaption, setImagePreview, setFile) => {
+    return createAction(POST_ACTION_TYPES.CREATE_POST_START, { formData, setOpen, setCaption, setImagePreview, setFile });
 }
 
 export const createPostSuccess = () => {
@@ -27,6 +27,30 @@ export const createPostSuccess = () => {
 
 export const createPostFailed = (error) => {
     return createAction(POST_ACTION_TYPES.CREATE_POST_FAILED, error);
+}
+
+export const editPostStart = (postId, formData, setOpen) => {
+    return createAction(POST_ACTION_TYPES.EDIT_POST_START, { postId, formData, setOpen });
+}
+
+export const editPostSuccess = (post) => {
+    return createAction(POST_ACTION_TYPES.EDIT_POST_SUCCESS, post);
+}
+
+export const editPostFailed = (error) => {
+    return createAction(POST_ACTION_TYPES.EDIT_POST_FAILED, error);
+}
+
+export const deletePostStart = (postId) => {
+    return createAction(POST_ACTION_TYPES.DELETE_POST_START, postId);
+}
+
+export const deletePostSuccess = () => {
+    return createAction(POST_ACTION_TYPES.DELETE_POST_SUCCESS);
+}
+
+export const deletePostFailed = (error) => {
+    return createAction(POST_ACTION_TYPES.DELETE_POST_FAILED, error);
 }
 
 export const dislikePostStart = (postId) => {

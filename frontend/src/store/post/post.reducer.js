@@ -4,6 +4,7 @@ import POST_ACTION_TYPES from "./post.types";
 const POST_INITIAL_STATE = {
     feedPosts: [],
     loadingCreatePost: false,
+    loadingEditPost: false,
     selectedPost: null,
     loadingSelectedPost: false,
     error: null,
@@ -42,6 +43,22 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 loadingCreatePost: false,
+                error: payload
+            }
+        case POST_ACTION_TYPES.EDIT_POST_START:
+            return {
+                ...state,
+                loadingEditPost: true
+            }
+        case POST_ACTION_TYPES.EDIT_POST_SUCCESS:
+            return {
+                ...state,
+                loadingEditPost: false,
+            }
+        case POST_ACTION_TYPES.EDIT_POST_FAILED:
+            return {
+                ...state,
+                loadingEditPost: false,
                 error: payload
             }
         case POST_ACTION_TYPES.DISLIKE_POST_SUCCESS:
