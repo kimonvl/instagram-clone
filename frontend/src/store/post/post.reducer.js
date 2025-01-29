@@ -5,6 +5,7 @@ const POST_INITIAL_STATE = {
     feedPosts: [],
     loadingCreatePost: false,
     loadingEditPost: false,
+    loadingDeletePost: false,
     selectedPost: null,
     loadingSelectedPost: false,
     error: null,
@@ -54,11 +55,33 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 loadingEditPost: false,
+                selectedPost: state.selectedPost && state.selectedPost?._id == payload._id ? {
+                    ...state.selectedPost,
+                    image: payload.image,
+                    caption: payload.caption,
+                } : state.selectedPost,
             }
         case POST_ACTION_TYPES.EDIT_POST_FAILED:
             return {
                 ...state,
                 loadingEditPost: false,
+                error: payload
+            }
+        case POST_ACTION_TYPES.DELETE_POST_START:
+            return {
+                ...state,
+                loadingDeletePost: true
+            }
+        case POST_ACTION_TYPES.DELETE_POST_SUCCESS:
+            return {
+                ...state,
+                loadingDeletePost: false,
+                selectedPost: state.selectedPost && state.selectedPost?._id == payload ? null : state.selectedPost,
+            }
+        case POST_ACTION_TYPES.DELETE_POST_FAILED:
+            return {
+                ...state,
+                loadingDeletePost: false,
                 error: payload
             }
         case POST_ACTION_TYPES.DISLIKE_POST_SUCCESS:
@@ -164,6 +187,7 @@ export const postReducer = (state = POST_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 loadingSelectedPost: false,
+                selectedPost: null,
                 error: payload,
             };
         case USER_ACTION_TYPES.LOGOUT_SUCCESS:

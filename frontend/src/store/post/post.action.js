@@ -41,8 +41,8 @@ export const editPostFailed = (error) => {
     return createAction(POST_ACTION_TYPES.EDIT_POST_FAILED, error);
 }
 
-export const deletePostStart = (postId) => {
-    return createAction(POST_ACTION_TYPES.DELETE_POST_START, postId);
+export const deletePostStart = (postId, setOpen, setOpenCommentDialog) => {
+    return createAction(POST_ACTION_TYPES.DELETE_POST_START, { postId, setOpen, setOpenCommentDialog });
 }
 
 export const deletePostSuccess = () => {

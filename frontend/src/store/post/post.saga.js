@@ -1,9 +1,9 @@
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
 import POST_ACTION_TYPES from "./post.types";
 import { sendAxiosPostFormData, sendAxiosPostJson } from "@/utils/api-requests/axios.utils";
-import { createPostFailed, createPostSuccess, dislikePostFailed, dislikePostSuccess, editPostFailed, editPostSuccess, fetchFeedPostsFailed, fetchFeedPostsSuccess, fetchSelectedPostFailed, fetchSelectedPostSuccess, likePostFailed, likePostSuccess } from "./post.action";
+import { createPostFailed, createPostSuccess, deletePostFailed, deletePostSuccess, dislikePostFailed, dislikePostSuccess, editPostFailed, editPostSuccess, fetchFeedPostsFailed, fetchFeedPostsSuccess, fetchSelectedPostFailed, fetchSelectedPostSuccess, likePostFailed, likePostSuccess } from "./post.action";
 import { toast } from "sonner";
-import { addPostToUser, editPostToUser } from "../user/user.action";
+import { addPostToUser, editPostToUser, removePostFromUser } from "../user/user.action";
 import { selectCurrentUser } from "../user/user.selector";
 
 export function* fetchFeedPosts() {
@@ -86,12 +86,29 @@ export function* editPost(action) {
         const res = yield call(sendAxiosPostFormData, `post/editpost/${action.payload.postId}`, action.payload.formData);
         if(res && res.data.success) {
             yield put(editPostToUser(res.data.post));
-            yield put(editPostSuccess());
+            yield put(editPostSuccess(res.data.post));
             action.payload.setOpen(false);
             toast.success(res.data.message);
         }
     } catch (error) {
         yield put(editPostFailed(error));
+        toast.error(error.response.data.message);
+    }
+}
+
+export function* deletePost(action) {
+    try {
+        const postId = action.payload.postId;
+        const res = yield call(sendAxiosPostJson, `post/deletepost/${postId}`);
+        if(res && res.data.success) {
+            yield put(deletePostSuccess(postId));
+            yield put(removePostFromUser(postId))
+            action.payload.setOpen(false);
+            action.payload.setOpenCommentDialog(false);
+            toast.success(res.data.message);
+        }
+    } catch (error) {
+        yield put(deletePostFailed(error));
         toast.error(error.response.data.message);
     }
 }
@@ -120,8 +137,12 @@ export function* onEditPostStart() {
     yield takeLatest(POST_ACTION_TYPES.EDIT_POST_START, editPost);
 }
 
+export function* onDeletePostStart() {
+    yield takeLatest(POST_ACTION_TYPES.DELETE_POST_START, deletePost);
+}
+
 
 
 export function* postSagas() {
-    yield all([call(onFetchFeedPostsStart), call(onCreatePostStart), call(onDislikePostStart), call(onLikePostStart), call(onFetchSelectedPostStart), call(onEditPostStart)]);
+    yield all([call(onFetchFeedPostsStart), call(onCreatePostStart), call(onDislikePostStart), call(onLikePostStart), call(onFetchSelectedPostStart), call(onEditPostStart), call(onDeletePostStart)]);
 }

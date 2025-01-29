@@ -51,11 +51,7 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
                 isLoading: false
             }
         case USER_ACTION_TYPES.LOGOUT_SUCCESS:
-            return {
-                ...state,
-                currentUser: null,
-                navigateToHome: false,
-            }
+            return USER_INITIAL_STATE;
         case USER_ACTION_TYPES.LOGOUT_FAILED:
             return {
                 ...state,
@@ -120,7 +116,11 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
                 currentUser: {
                     ...state.currentUser,
                     posts: [...state.currentUser.posts, payload]
-                }
+                },
+                selectedProfile: state.selectedProfile && state.selectedProfile._id == payload.author ? {
+                    ...state.selectedProfile,
+                    posts: [...state.selectedProfile.posts, payload]
+                } : selectedProfile,
             }
         case USER_ACTION_TYPES.EDIT_POST_TO_USER:
             return {
@@ -137,8 +137,12 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
                 ...state,
                 currentUser: {
                     ...state.currentUser,
-                    posts: posts.filter((post) => post._id !== payload)
-                }
+                    posts: state.currentUser.posts.filter((post) => post._id !== payload)
+                },
+                selectedProfile: state.selectedProfile ? {
+                    ...state.selectedProfile,
+                    posts: state.selectedProfile.posts.filter((post) => post._id !== payload)
+                } : selectedProfile,
             }
         default:
             return state;
