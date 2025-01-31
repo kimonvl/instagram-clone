@@ -4,7 +4,7 @@ import CHAT_ACTION_TYPES from "./chat.types";
 const CHAT_INITIAL_STATE = {
     selectedConversation: null,
     loadingSelectedConversation: false,
-    existingCnversations: [],
+    existingConversations: [],
     loadingExistingConversations: false,
     loadingSendMessage: false,
     potentialConversation: null,
@@ -31,6 +31,23 @@ export const chatReducer = (state = CHAT_INITIAL_STATE, action = {}) => {
                 loadingSelectedConversation: false,
                 error: payload,
             }
+        case CHAT_ACTION_TYPES.FETCH_EXISTING_CONVERSATIONS_START:
+            return {
+                ...state,
+                loadingExistingConversations: true,
+            }
+        case CHAT_ACTION_TYPES.FETCH_EXISTING_CONVERSATIONS_SUCCESS:
+            return {
+                ...state,
+                loadingExistingConversations: false,
+                existingConversations: payload,
+            }
+        case CHAT_ACTION_TYPES.FETCH_EXISTING_CONVERSATIONS_FAILED:
+            return {
+                ...state,
+                loadingExistingConversations: false,
+                error: payload,
+            }
         case CHAT_ACTION_TYPES.SEND_MESSAGE_START:
             return {
                 ...state,
@@ -51,6 +68,11 @@ export const chatReducer = (state = CHAT_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 potentialConversation: payload,
+            }
+        case CHAT_ACTION_TYPES.ADD_TO_EXISTING_CONVERSATIONS:
+            return {
+                ...state,
+                existingConversations: [...state.existingConversations, payload]
             }
         case CHAT_ACTION_TYPES.CLEAR_POTENTIAL_CONVERSATION:
             return {

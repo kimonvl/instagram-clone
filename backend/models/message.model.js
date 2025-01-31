@@ -5,5 +5,8 @@ const messageSchema = new mongoose.Schema({
     reciever: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     conversation: { type: mongoose.Schema.Types.ObjectId, ref: '', required: true },
     message: { type: String, required: true }
+},
+{
+    timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
 });
 export const Message = mongoose.model("Message", messageSchema);

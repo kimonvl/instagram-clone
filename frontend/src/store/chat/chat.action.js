@@ -13,6 +13,18 @@ export const fetchSelectedConversationFailed = (error) => {
     return createAction(CHAT_ACTION_TYPES.FETCH_SELECTED_CONVERSATION_FAILED, error);
 }
 
+export const fetchExistingConversationsStart = () => {
+    return createAction(CHAT_ACTION_TYPES.FETCH_EXISTING_CONVERSATIONS_START);
+}
+
+export const fetchExistingConversationsSuccess = (conversations) => {
+    return createAction(CHAT_ACTION_TYPES.FETCH_EXISTING_CONVERSATIONS_SUCCESS, conversations);
+}
+
+export const fetchExistingConversationsFailed = (error) => {
+    return createAction(CHAT_ACTION_TYPES.FETCH_EXISTING_CONVERSATIONS_FAILED, error);
+}
+
 export const sendMessageStart = (recieverId, messageText) => {
     return createAction(CHAT_ACTION_TYPES.SEND_MESSAGE_START, { recieverId, messageText });
 }
@@ -27,6 +39,10 @@ export const sendMessageFailed = (error) => {
 
 export const addPotentialConversation = (recieverId, username, profilePicture) => {
     return createAction(CHAT_ACTION_TYPES.ADD_POTENTIAL_CONVERSATION, { recieverId, username, profilePicture });
+}
+
+export const addToExistingConversations = (conversation) => {
+    return createAction(CHAT_ACTION_TYPES.ADD_TO_EXISTING_CONVERSATIONS, conversation);
 }
 
 export const clearPotentialConversation = () => {

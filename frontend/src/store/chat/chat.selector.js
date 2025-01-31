@@ -21,3 +21,13 @@ export const selectLoadingSelectedConversation = createSelector(
     [selectChatReducer],
     (chatSlice) => chatSlice.loadingSelectedConversation
 );
+
+export const selectLoadingExistingConversations = createSelector(
+    [selectChatReducer],
+    (chatSlice) => chatSlice.loadingExistingConversations
+);
+
+export const selectLoadingSendMessage = createSelector(
+    [selectChatReducer],
+    (chatSlice) => chatSlice.loadingSendMessage
+);

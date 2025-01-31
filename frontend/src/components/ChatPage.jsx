@@ -6,7 +6,7 @@ import Messages from "./Messages";
 import { useDispatch, useSelector } from "react-redux";
 import { selectExistingConversations, selectPotentialConversation, selectSelectedConversation } from "@/store/chat/chat.selector";
 import { useEffect, useState } from "react";
-import { clearPotentialConversation, sendMessageStart } from "@/store/chat/chat.action";
+import { clearPotentialConversation, clearSelectedConversation, fetchExistingConversationsStart, fetchSelectedConversationStart, sendMessageStart } from "@/store/chat/chat.action";
 import { selectCurrentUser } from "@/store/user/user.selector";
 
 const ChatPage = () => {
@@ -42,6 +42,10 @@ const ChatPage = () => {
     }
 
     useEffect(() => {
+        dispatch(fetchExistingConversationsStart());
+    }, [])
+
+    useEffect(() => {
         return () => {
             dispatch(clearPotentialConversation());
         };
@@ -54,10 +58,15 @@ const ChatPage = () => {
         setMessage("");
     }
 
+    const selectConversation = (otherId) => {
+        dispatch(fetchSelectedConversationStart(otherId));
+        dispatch(clearPotentialConversation());
+    }
+
     return (
         <div className="flex ml-[16%] h-screen">
             <section className="w-full md:w-1/4 my-8">
-                <h1 className="font-bold mb-4 px-3 text-xl">{currentUser?.username}</h1>
+                <h1 onClick={() => dispatch(clearSelectedConversation())} className="font-bold mb-4 px-3 text-xl">{currentUser?.username}</h1>
                 <hr className="mb-4 border-gray-300" />
                 <div className="overflow-y-auto h-[80vh]">
                     {
@@ -76,8 +85,9 @@ const ChatPage = () => {
                     {
                         existingConversations && existingConversations.map((conversation) => {
                             const otherParticipant = conversation.participants.find((participant) => participant._id != currentUser._id)
+                            console.log("existing conv loop participant: ", otherParticipant);
                             return (
-                                <div className={`flex gap-3 items-center p-3 hover:bg-gray-50 cursor-pointer ${conversation._id == selectedConversation._id ? 'bg-gray-100' : ''}`}>
+                                <div onClick={() => selectConversation(otherParticipant?._id)} className={`flex gap-3 items-center p-3 hover:bg-gray-50 cursor-pointer ${conversation._id == selectedConversation?._id ? 'bg-gray-100' : ''}`}>
                                     <Avatar className="w-14 h-14">
                                         <AvatarImage src={otherParticipant?.profilePicture} />
                                         <AvatarFallback>CN</AvatarFallback>
