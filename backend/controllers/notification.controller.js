@@ -48,18 +48,18 @@ export const markAsSeenNotifications = async (req, res) => {
 export const getOfflineUnseenNotifications = async (req, res) => {
     const recieverId = req.id;
     try {
-        const likeNotifications = await LikeNotification.find({ receiverId: recieverId, seen: false }).populate(
-            'senderId',
+        const likeNotifications = await LikeNotification.find({ reciever: recieverId, seen: false }).populate(
+            'sender',
             'username profilePicture'
         );
 
-        const followNotifications = await FollowNotification.find({ receiverId: recieverId, seen: false }).populate(
-            'senderId',
+        const followNotifications = await FollowNotification.find({ reciever: recieverId, seen: false }).populate(
+            'sender',
             'username profilePicture'
         );
 
-        const commentNotifications = await CommentNotification.find({ receiverId: recieverId, seen: false }).populate(
-            'senderId',
+        const commentNotifications = await CommentNotification.find({ reciever: recieverId, seen: false }).populate(
+            'sender',
             'username profilePicture'
         );
 
@@ -95,16 +95,16 @@ export const getOfflineUnseenNotifications = async (req, res) => {
 export const getSeenNotifications = async (req, res) => {
     const recieverId = req.id;
     try {
-        const likeNotifications = await LikeNotification.find({ receiverId: recieverId, seen: true }).populate(
-            'senderId',
+        const likeNotifications = await LikeNotification.find({ reciever: recieverId, seen: true }).populate(
+            'sender',
             'username profilePicture'
         );
-        const followNotifications = await FollowNotification.find({ receiverId: recieverId, seen: true }).populate(
-            'senderId',
+        const followNotifications = await FollowNotification.find({ reciever: recieverId, seen: true }).populate(
+            'sender',
             'username profilePicture'
         );
-        const commentNotifications = await CommentNotification.find({ receiverId: recieverId, seen: true }).populate(
-            'senderId',
+        const commentNotifications = await CommentNotification.find({ reciever: recieverId, seen: true }).populate(
+            'sender',
             'username profilePicture'
         );
 
@@ -141,12 +141,12 @@ export const createLikeNotification = async (userId, post) => {
     try {
         const receiverId = new mongoose.Types.ObjectId(post.author.toString());
         console.log("creating notification with recieverId: ", post.author);
-        const likeNotification = await LikeNotification.create({ senderId: userId, receiverId, postId: post._id });
+        const likeNotification = await LikeNotification.create({ sender: userId, reciever: receiverId, postId: post._id });
 
         if (likeNotification) {
             // Populate sender details if needed
             const populatedNotification = await LikeNotification.findById(likeNotification._id).populate(
-                'senderId',
+                'sender',
                 'username profilePicture'
             );
 
@@ -169,7 +169,7 @@ export const createLikeNotification = async (userId, post) => {
 
 export const deleteLikeNotification = async (userId, post) => {
     try {
-        const deleted = await LikeNotification.findOneAndDelete({ senderId: userId, receiverId: post.author, postId: post._id });
+        const deleted = await LikeNotification.findOneAndDelete({ sender: userId, receiver: post.author, postId: post._id });
 
         if (deleted) {
             console.log('Notification deleted:', deleted);
@@ -186,12 +186,12 @@ export const createFollowNotification = async (senderId, recieverId) => {
     try {
         console.log("creating notification with recieverId: ", recieverId);
         recieverId = new mongoose.Types.ObjectId(recieverId.toString());
-        const followNotification = await FollowNotification.create({ senderId, receiverId: recieverId });
+        const followNotification = await FollowNotification.create({ sender: senderId, reciever: recieverId });
 
         if (followNotification) {
             // Populate sender details if needed
             const populatedNotification = await FollowNotification.findById(followNotification._id).populate(
-                'senderId',
+                'sender',
                 'username profilePicture'
             );
 
@@ -213,7 +213,7 @@ export const createFollowNotification = async (senderId, recieverId) => {
 
 export const deleteFollowNotification = async (senderId, receiverId) => {
     try {
-        const deleted = await FollowNotification.findOneAndDelete({ senderId, receiverId });
+        const deleted = await FollowNotification.findOneAndDelete({ sender: senderId, reciever: receiverId });
 
         if (deleted) {
             console.log('Notification deleted:', deleted);
@@ -227,12 +227,12 @@ export const deleteFollowNotification = async (senderId, receiverId) => {
 
 export const createCommentNotification = async (userId, receiverId, commentId) => {
     try {
-        const commentNotification = await CommentNotification.create({ senderId: userId, receiverId, commentId });
+        const commentNotification = await CommentNotification.create({ sender: userId, reciever: receiverId, commentId });
         console.log("comment notification", commentNotification)
         if (commentNotification) {
             // Populate sender details if needed
             const populatedNotification = await CommentNotification.findById(commentNotification._id).populate(
-                'senderId',
+                'sender',
                 'username profilePicture'
             );
 
@@ -256,7 +256,7 @@ export const createCommentNotification = async (userId, receiverId, commentId) =
 
 export const deleteCommentNotification = async (senderId, receiverId) => {
     try {
-        const deleted = await CommentNotification.findOneAndDelete({ senderId, receiverId });
+        const deleted = await CommentNotification.findOneAndDelete({ sender: senderId, reciever: receiverId });
 
         if (deleted) {
             console.log('Notification deleted:', deleted);

@@ -120,7 +120,7 @@ export const userReducer = (state = USER_INITIAL_STATE, action = {}) => {
                 selectedProfile: state.selectedProfile && state.selectedProfile._id == payload.author ? {
                     ...state.selectedProfile,
                     posts: [...state.selectedProfile.posts, payload]
-                } : selectedProfile,
+                } : state.selectedProfile,
             }
         case USER_ACTION_TYPES.EDIT_POST_TO_USER:
             return {

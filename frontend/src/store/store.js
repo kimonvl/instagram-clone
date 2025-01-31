@@ -16,7 +16,7 @@ const composedEnhancers = compose(applyMiddleware(...middlewares));
 export const persistConfig = {
     key: 'root',
     storage: storage,
-    whitelist: ['user', 'socket', 'notification'],
+    whitelist: ['user', 'socket', 'notification', 'chat'],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -11,10 +11,12 @@ import { clearUnseenNotificationForView, fetchSeenNotificationsStart, markAsSeen
 import FollowNotification from './FollowNotification';
 import { redirect, useNavigate } from 'react-router-dom';
 import CommentNotification from './CommentNotification';
+import { clearSelectedConversation } from '@/store/chat/chat.action';
 
 const LeftSidebar = () => {
     const [open, setOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
+    const [messagesOpen, setMessagesOpen] = useState(false);
 
     const user = useSelector(selectCurrentUser);
     const unseenNotificationForView = useSelector(selectUnseenNotificationsForView);
@@ -62,6 +64,16 @@ const LeftSidebar = () => {
         }
     }
 
+    const handleMessagesOpen = () => {
+        if(messagesOpen){
+            setMessagesOpen(false);
+            navigate('/');
+        }else {
+            setMessagesOpen(true);
+            navigate(`/chat`);
+        }
+    }
+
     const leftSidebarClickHandler = (type) => {
         switch (type) {
             case "Logout":
@@ -75,9 +87,14 @@ const LeftSidebar = () => {
                 break;
             case "Profile":
                 navigate(`/profile/${user._id}`);
+                dispatch(clearSelectedConversation());
                 break;
             case "Home":
                 navigate(`/`);
+                dispatch(clearSelectedConversation());
+                break;
+            case "Messages":
+                handleMessagesOpen();
                 break;
             default:
                 break;
@@ -142,11 +159,11 @@ const LeftSidebar = () => {
                                 {
                                     unseenNotificationForView.map((notification) => {
                                         if (notification.type == "like") {
-                                            return (<LikeNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                            return (<LikeNotification key={notification._id} username={notification.sender.username} userImage={notification.sender.profilePicture} />)
                                         } else if (notification.type == "follow") {
-                                            return (<FollowNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                            return (<FollowNotification key={notification._id} username={notification.sender.username} userImage={notification.sender.profilePicture} />)
                                         } else if (notification.type == "comment") {
-                                            return (<CommentNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                            return (<CommentNotification key={notification._id} username={notification.sender.username} userImage={notification.sender.profilePicture} />)
                                         }
                                     })
                                 }
@@ -157,12 +174,13 @@ const LeftSidebar = () => {
                             <div className="flex flex-col gap-3">
                                 {
                                     seenNotifications.map((notification) => {
+                                        console.log("leftsidebar ", notification);
                                         if (notification.type == "like") {
-                                            return (<LikeNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                            return (<LikeNotification key={notification._id} username={notification.sender.username} userImage={notification.sender.profilePicture} />)
                                         } else if (notification.type == "follow") {
-                                            return (<FollowNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                            return (<FollowNotification key={notification._id} username={notification.sender.username} userImage={notification.sender.profilePicture} />)
                                         } else if (notification.type == "comment") {
-                                            return (<CommentNotification key={notification._id} username={notification.senderId.username} userImage={notification.senderId.profilePicture} />)
+                                            return (<CommentNotification key={notification._id} username={notification.sender.username} userImage={notification.sender.profilePicture} />)
                                         }
                                     })
                                 }

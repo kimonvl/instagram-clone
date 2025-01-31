@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Link, useParams } from 'react-router-dom'
+import { Link, redirect, useNavigate, useParams } from 'react-router-dom'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { AtSign, Heart, MessageCircle } from 'lucide-react'
@@ -9,9 +9,11 @@ import { selectCurrentUser, selectSelectedProfile } from '@/store/user/user.sele
 import { fetchSelectedProfileStart } from '@/store/user/user.action'
 import CommentDialog from './CommentDialog'
 import { fetchSelectedPostStart } from '@/store/post/post.action'
+import { fetchSelectedConversationStart } from '@/store/chat/chat.action'
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const selectedProfile = useSelector(selectSelectedProfile);
   const currentUser = useSelector(selectCurrentUser);
   const params = useParams();
@@ -31,6 +33,12 @@ const Profile = () => {
     dispatch(fetchSelectedPostStart([postId]));
     setOpenCommentDialog(true);
     console.log("post click");
+  }
+
+  const handleOpenConvertation = () => {
+    console.log("profile ", selectedProfile);
+    dispatch(fetchSelectedConversationStart(selectedProfile?._id));
+    navigate('/chat');
   }
 
   return (
@@ -62,7 +70,7 @@ const Profile = () => {
                           : (<Button variant="secondary" className="hover:bg-gray-200 h-8">Follow</Button>)
                       }
 
-                      <Button variant="secondary" className="hover:bg-gray-200 h-8">Send message</Button>
+                      <Button onClick={handleOpenConvertation} variant="secondary" className="hover:bg-gray-200 h-8">Send message</Button>
                     </>
                   )
                 }

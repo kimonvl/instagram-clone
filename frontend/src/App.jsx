@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser } from './store/user/user.selector'
 import { selectSocket } from './store/socket/socket.selector'
 import { socketConnect } from './store/socket/socket.action'
+import ChatPage from './components/ChatPage'
 
 
 const browserRouter = createBrowserRouter([
@@ -24,6 +25,10 @@ const browserRouter = createBrowserRouter([
       {
         path: "/profile/:id",
         element: <Profile />
+      },
+      {
+        path: "/chat",
+        element: <ChatPage/>
       }
     ]
   },

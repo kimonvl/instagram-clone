@@ -4,6 +4,7 @@ import { postReducer } from "./post/post.reducer";
 import { socketReducer } from "./socket/socket.reducer";
 import notificationReducer from "./notification/notification.reducer";
 import { commentReducer } from "./comment/comment.reducer";
+import { chatReducer } from "./chat/chat.reducer";
 
 export const rootReducer = combineReducers({
     user: userReducer,
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
     socket: socketReducer,
     notification: notificationReducer,
     comment: commentReducer,
+    chat: chatReducer,
 })

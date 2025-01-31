@@ -12,17 +12,20 @@ export const sendMessage = async (req, res) => {
         if(!message) return res.status(400).json({message:"Text is missing", success: false});
 
         //retrieve the conversation
+        let newConv = false;
         let conversation = await Conversation.findOne({ participants: { $all: [senderId, recieverId] } });
         //initiate conversation if doesnt exist
         if(!conversation){
             conversation = await Conversation.create({
                 participants:[senderId, recieverId]
             });
+            newConv = true;
         }
 
         const newMessage = await Message.create({
-            senderId,
-            recieverId,
+            sender: senderId,
+            reciever: recieverId,
+            conversation: conversation._id,
             message
         });
 
@@ -34,7 +37,8 @@ export const sendMessage = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            newMessage
+            message: newMessage,
+            conversation: newConv ? conversation : null,
         });
 
     } catch (error) {
@@ -47,8 +51,10 @@ export const getConversation = async (req, res) => {
         const senderId = req.id;
         const recieverId = req.params.id;
 
-        const conversation = await Conversation.find({participants:{$all:[senderId, recieverId]}}).populate({path:"messages", select:"message"});
-        if(!conversation) return res.status(200).json({message:"empty conversation", success:false, conversation:{}});
+        const conversation = await Conversation.findOne({participants:{$all:[senderId, recieverId]}})
+        .populate({path:"messages", select:"message sender"})
+        .populate({path:"participants", select:"username profilePicture"});
+        if(!conversation) return res.status(200).json({message:"empty conversation", success:true, conversation:{}});
 
         return res.status(200).json({
             success: true,
@@ -56,5 +62,9 @@ export const getConversation = async (req, res) => {
         }); 
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            success: false,
+            message:"Error while fetching conversation"
+        }); 
     }
 }

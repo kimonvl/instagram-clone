@@ -4,12 +4,12 @@ const { Schema, model } = mongoose;
 
 const likeNotificationSchema = new Schema(
     {
-        senderId: {
+        sender: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
-        receiverId: {
+        reciever: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
