@@ -9,16 +9,17 @@ import LikeNotification from './LikeNotification';
 import { selectSeenNotifications, selectUnseenNotifications, selectUnseenNotificationsForView } from '@/store/notification/notification.selector';
 import { clearUnseenNotificationForView, fetchSeenNotificationsStart, markAsSeenNotificationStart } from '@/store/notification/notification.action';
 import FollowNotification from './FollowNotification';
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CommentNotification from './CommentNotification';
 import { clearSelectedConversation } from '@/store/chat/chat.action';
+import { selectUnseenMessages } from '@/store/chat/chat.selector';
 
 const LeftSidebar = () => {
     const [open, setOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
-    const [messagesOpen, setMessagesOpen] = useState(false);
 
     const user = useSelector(selectCurrentUser);
+    const unseenMessages = useSelector(selectUnseenMessages);
     const unseenNotificationForView = useSelector(selectUnseenNotificationsForView);
     const unseenNotification = useSelector(selectUnseenNotifications);
     const seenNotifications = useSelector(selectSeenNotifications);
@@ -65,13 +66,7 @@ const LeftSidebar = () => {
     }
 
     const handleMessagesOpen = () => {
-        if(messagesOpen){
-            setMessagesOpen(false);
-            navigate('/');
-        }else {
-            setMessagesOpen(true);
-            navigate(`/chat`);
-        }
+        navigate(`/chat`);
     }
 
     const leftSidebarClickHandler = (type) => {
@@ -103,12 +98,12 @@ const LeftSidebar = () => {
 
     return (
         <div
-            className={`fixed top-0 z-10 border-r border-gray-300 h-screen flex transition-all duration-300 ease-in-out ${notificationOpen ? 'w-[16%]' : 'w-[16%]'
+            className={`fixed top-0 z-10 border-r border-gray-300 h-screen flex transition-all duration-300 ease-in-out ${notificationOpen ? 'w-[30%]' : 'w-[16%]'
                 }`}
         >
             {/* Icons Section */}{/* add when chat is open similar to notifications*/}
             <div
-            
+
                 className={`flex flex-col transition-all duration-300 ease-in-out ${notificationOpen ? 'w-1/3' : 'w-full'
                     } px-4`}
             >
@@ -120,24 +115,26 @@ const LeftSidebar = () => {
                             className='flex items-center gap-3 relative hover:bg-gray-100 cursor-pointer rounded-lg p-3 my-3'
                             key={index}
                         >
-                            {/* Render item icon with badge for Notifications */}
-                            {item.text === "Notifications" ? (
-                                <div className="relative w-6 h-6">
-                                    {item.icon}
-                                    {unseenNotification.length > 0 && (
-                                        <span
-                                            className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center"
-                                            style={{
-                                                transform: 'translate(50%, -50%)',
-                                            }}
-                                        >
-                                            {unseenNotification.length}
-                                        </span>
-                                    )}
-                                </div>
-                            ) : (
-                                item.icon
-                            )}
+                            {/* Icon with notification badge */}
+                            <div className="relative w-6 h-6">
+                                {item.icon}
+
+                                {/* Badge for Notifications */}
+                                {item.text === "Notifications" && unseenNotification.length > 0 && (
+                                    <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center"
+                                        style={{ transform: 'translate(50%, -50%)' }}>
+                                        {unseenNotification.length}
+                                    </span>
+                                )}
+
+                                {/* Badge for Messages */}
+                                {item.text === "Messages" && unseenMessages?.length > 0 && (
+                                    <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center"
+                                        style={{ transform: 'translate(50%, -50%)' }}>
+                                        {unseenMessages?.length}
+                                    </span>
+                                )}
+                            </div>
                             {/* Render item text if sidebar is open */}
                             {!notificationOpen && <span>{item.text}</span>}
                         </div>

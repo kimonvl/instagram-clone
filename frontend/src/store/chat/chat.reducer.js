@@ -8,6 +8,7 @@ const CHAT_INITIAL_STATE = {
     loadingExistingConversations: false,
     loadingSendMessage: false,
     potentialConversation: null,
+    unseenMessages: [],
 }
 
 export const chatReducer = (state = CHAT_INITIAL_STATE, action = {}) => {
@@ -46,6 +47,26 @@ export const chatReducer = (state = CHAT_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 loadingExistingConversations: false,
+                error: payload,
+            }
+        case CHAT_ACTION_TYPES.FETCH_UNSEEN_MESSAGES_SUCCESS:
+            return {
+                ...state,
+                unseenMessages: payload,
+            }
+        case CHAT_ACTION_TYPES.FETCH_UNSEEN_MESSAGES_FAILED:
+            return {
+                ...state,
+                error: payload,
+            }
+        case CHAT_ACTION_TYPES.MARK_AS_SEEN_MESSAGES_SUCCESS:
+            return {
+                ...state,
+                unseenMessages: state.unseenMessages.filter((msg) => msg.conversation != payload),
+            }
+        case CHAT_ACTION_TYPES.FETCH_UNSEEN_MESSAGES_FAILED:
+            return {
+                ...state,
                 error: payload,
             }
         case CHAT_ACTION_TYPES.SEND_MESSAGE_START:

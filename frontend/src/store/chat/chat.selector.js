@@ -31,3 +31,8 @@ export const selectLoadingSendMessage = createSelector(
     [selectChatReducer],
     (chatSlice) => chatSlice.loadingSendMessage
 );
+
+export const selectUnseenMessages = createSelector(
+    [selectChatReducer],
+    (chatSlice) => chatSlice.unseenMessages
+);

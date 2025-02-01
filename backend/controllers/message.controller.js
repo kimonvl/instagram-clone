@@ -155,3 +155,60 @@ export const getExistingConversations = async (req, res) => {
         });
     }
 }
+
+export const getUnseenMessages = async (req, res) => {
+    try {
+        const userId = req.id;
+
+        const unseenMessages = await Message.find({seen: false, reciever: userId})
+        if(unseenMessages.length == 0) {
+            return res.status(200).json({
+                success: true,
+                message: "0 unseen messages found",
+                unseenMessages,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: `${unseenMessages.length} unseen messages found`,
+            unseenMessages,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            success: false,
+            message:"Error while fetching unseen messages",
+        });
+    }
+}
+
+export const markAsSeenMessages = async (req, res) => {
+    try {
+        const userId = req.id;
+        const convId = req.params.id;
+
+        const result = await Message.updateMany({reciever: userId, conversation: convId, seen: false},
+            {$set: {seen: true}}
+        )
+
+        if(result) {
+            return res.status(200).json({
+                success: true,
+                message: "Messages marked as seen",
+            });
+        }else {
+            return res.status(400).json({
+                success: false,
+                message: "Messages not found",
+            });
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            success: false,
+            message:"Error while marking messages as seen",
+        });
+    }
+}

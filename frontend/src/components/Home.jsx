@@ -7,6 +7,7 @@ import { fetchFeedPostsStart } from '@/store/post/post.action'
 import { selectCurrentUser } from '@/store/user/user.selector'
 import { fetchSuggestedUsersStart } from '@/store/user/user.action'
 import { fetchOfflineUnseenNotificationsStart } from '@/store/notification/notification.action'
+import { fetchUnseenMessagesStart } from '@/store/chat/chat.action'
 
 const Home = () => {
 
@@ -36,6 +37,12 @@ const Home = () => {
   useEffect(() =>{
     if(user) {
       dispatch(fetchOfflineUnseenNotificationsStart(user._id));
+    }
+  }, []);
+
+  useEffect(() =>{
+    if(user) {
+      dispatch(fetchUnseenMessagesStart());
     }
   }, []);
 

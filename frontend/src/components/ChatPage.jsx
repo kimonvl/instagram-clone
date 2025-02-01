@@ -4,13 +4,14 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Messages from "./Messages";
 import { useDispatch, useSelector } from "react-redux";
-import { selectExistingConversations, selectPotentialConversation, selectSelectedConversation } from "@/store/chat/chat.selector";
+import { selectExistingConversations, selectPotentialConversation, selectSelectedConversation, selectUnseenMessages } from "@/store/chat/chat.selector";
 import { useEffect, useState } from "react";
-import { clearPotentialConversation, clearSelectedConversation, fetchExistingConversationsStart, fetchSelectedConversationStart, sendMessageStart } from "@/store/chat/chat.action";
+import { clearPotentialConversation, clearSelectedConversation, fetchExistingConversationsStart, fetchSelectedConversationStart, markAsSeenMessagesStart, sendMessageStart } from "@/store/chat/chat.action";
 import { selectCurrentUser } from "@/store/user/user.selector";
 
 const ChatPage = () => {
     const dispatch = useDispatch();
+    const unseenMessages = useSelector(selectUnseenMessages);
     const existingConversations = useSelector(selectExistingConversations);
     const selectedConversation = useSelector(selectSelectedConversation);
     const potentialConversation = useSelector(selectPotentialConversation);
@@ -25,7 +26,7 @@ const ChatPage = () => {
     const joinedObj = potentialConversation ? { ...potentialConversation, type: "potential" } : { selectedConversation, type: "selected" };
 
     let activeConversation;
-    if(selectedConversation || potentialConversation) {
+    if (selectedConversation || potentialConversation) {
         activeConversation = joinedObj.type == "potential" ? {
             recieverId: potentialConversation.recieverId,
             recieverImage: potentialConversation.profilePicture,
@@ -58,8 +59,10 @@ const ChatPage = () => {
         setMessage("");
     }
 
-    const selectConversation = (otherId) => {
+    const selectConversation = (otherId, convId) => {
+        console.log(convId);
         dispatch(fetchSelectedConversationStart(otherId));
+        dispatch(markAsSeenMessagesStart(convId));
         dispatch(clearPotentialConversation());
     }
 
@@ -85,9 +88,10 @@ const ChatPage = () => {
                     {
                         existingConversations && existingConversations.map((conversation) => {
                             const otherParticipant = conversation.participants.find((participant) => participant._id != currentUser._id)
+                            const unseenMessagesForConvo = unseenMessages.filter((msg) => msg.conversation === conversation._id);
                             console.log("existing conv loop participant: ", otherParticipant);
                             return (
-                                <div onClick={() => selectConversation(otherParticipant?._id)} className={`flex gap-3 items-center p-3 hover:bg-gray-50 cursor-pointer ${conversation._id == selectedConversation?._id ? 'bg-gray-100' : ''}`}>
+                                <div onClick={() => selectConversation(otherParticipant?._id, conversation._id)} className={`flex gap-3 items-center p-3 hover:bg-gray-50 cursor-pointer ${conversation._id == selectedConversation?._id ? 'bg-gray-100' : ''}`}>
                                     <Avatar className="w-14 h-14">
                                         <AvatarImage src={otherParticipant?.profilePicture} />
                                         <AvatarFallback>CN</AvatarFallback>
@@ -96,6 +100,12 @@ const ChatPage = () => {
                                         <span className="font-medium">{otherParticipant?.username}</span>
                                         <span className={`text-sm font-bold ${true ? 'text-green-600' : 'text-red-600'}`}>{true ? 'online' : offline}</span>
                                     </div>
+                                    {/* Badge for Unseen Messages */}
+                                    {unseenMessagesForConvo.length > 0 && (
+                                        <span className="ml-auto bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                                            {unseenMessagesForConvo.length}
+                                        </span>
+                                    )}
                                 </div>
                             )
                         })
@@ -114,7 +124,7 @@ const ChatPage = () => {
                                 <span>{activeConversation.recieverUsername}</span>
                             </div>
                         </div>
-                        <Messages friendId={activeConversation.recieverId} friendImage={activeConversation.recieverImage} friendUsername={activeConversation.recieverUsername} messages={activeConversation.messages}/>
+                        <Messages friendId={activeConversation.recieverId} friendImage={activeConversation.recieverImage} friendUsername={activeConversation.recieverUsername} messages={activeConversation.messages} />
                         <div className="flex items-center p-4 border-t border-t-gray-300">
                             <Input value={message} onChange={handleMessageChange} type="text" className="flex-1 mr-2 focus-visible:ring-transparent" placeholder="Messages...." />
                             <Button onClick={sendMessageHnadler}>Send</Button>

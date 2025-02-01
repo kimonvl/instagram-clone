@@ -25,6 +25,18 @@ export const fetchExistingConversationsFailed = (error) => {
     return createAction(CHAT_ACTION_TYPES.FETCH_EXISTING_CONVERSATIONS_FAILED, error);
 }
 
+export const fetchUnseenMessagesStart = () => {
+    return createAction(CHAT_ACTION_TYPES.FETCH_UNSEEN_MESSAGES_START);
+}
+
+export const fetchUnseenMessagesSuccess = (unseenMessages) => {
+    return createAction(CHAT_ACTION_TYPES.FETCH_UNSEEN_MESSAGES_SUCCESS, unseenMessages);
+}
+
+export const fetchUnseenMessagesFailed = (error) => {
+    return createAction(CHAT_ACTION_TYPES.FETCH_UNSEEN_MESSAGES_FAILED, error);
+}
+
 export const sendMessageStart = (recieverId, messageText) => {
     return createAction(CHAT_ACTION_TYPES.SEND_MESSAGE_START, { recieverId, messageText });
 }
@@ -36,6 +48,19 @@ export const sendMessageSuccess = () => {
 export const sendMessageFailed = (error) => {
     return createAction(CHAT_ACTION_TYPES.SEND_MESSAGE_FAILED, error);
 }
+
+export const markAsSeenMessagesStart = (convId) => {
+    return createAction(CHAT_ACTION_TYPES.MARK_AS_SEEN_MESSAGES_START, convId);
+}
+
+export const markAsSeenMessagesSuccess = (convId) => {
+    return createAction(CHAT_ACTION_TYPES.MARK_AS_SEEN_MESSAGES_SUCCESS, convId);
+}
+
+export const markAsSeenMessagesFailed = (error) => {
+    return createAction(CHAT_ACTION_TYPES.MARK_AS_SEEN_MESSAGES_FAILED, error);
+}
+
 
 export const addPotentialConversation = (recieverId, username, profilePicture) => {
     return createAction(CHAT_ACTION_TYPES.ADD_POTENTIAL_CONVERSATION, { recieverId, username, profilePicture });
