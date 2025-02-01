@@ -3,6 +3,7 @@ import CHAT_ACTION_TYPES from "./chat.types";
 
 const CHAT_INITIAL_STATE = {
     selectedConversation: null,
+    selectedConversationOpen: false,
     loadingSelectedConversation: false,
     existingConversations: [],
     loadingExistingConversations: false,
@@ -24,6 +25,7 @@ export const chatReducer = (state = CHAT_INITIAL_STATE, action = {}) => {
             return {
                 ...state,
                 loadingSelectedConversation: false,
+                selectedConversationOpen: true,
                 selectedConversation: payload,
             }
         case CHAT_ACTION_TYPES.FETCH_SELECTED_CONVERSATION_FAILED:
@@ -103,6 +105,7 @@ export const chatReducer = (state = CHAT_INITIAL_STATE, action = {}) => {
         case CHAT_ACTION_TYPES.CLEAR_SELECTED_CONVERSATION:
             return {
                 ...state,
+                selectedConversationOpen: false,
                 selectedConversation: null,
             }
         case CHAT_ACTION_TYPES.ADD_MESSAGE_TO_SELECTED_CONVERSATION:
@@ -112,6 +115,27 @@ export const chatReducer = (state = CHAT_INITIAL_STATE, action = {}) => {
                     ...state.selectedConversation,
                     messages: [...state.selectedConversation.messages, payload],
                 }
+            }
+        case CHAT_ACTION_TYPES.RECIEVE_MESSAGE:
+            return {
+                ...state,
+                selectedConversation: state.selectedConversation && state.selectedConversationOpen && state.selectedConversation._id == payload.conversation ?
+                    {
+                        ...state.selectedConversation,
+                        messages: [...state.selectedConversation.messages, payload],
+                    } :  state.selectedConversation,
+                unseenMessages : state.selectedConversation && state.selectedConversationOpen && state.selectedConversation._id == payload.conversation ?
+                    state.unseenMessages : [...state.unseenMessages, payload],
+                existingConversations : state.existingConversations.map((conv) => {
+                    if(conv._id == payload.conversation) {
+                        return {
+                            ...conv,
+                            lastMessage: payload
+                        }
+                    } else {
+                        return conv;
+                    }
+                })
             }
         case USER_ACTION_TYPES.LOGIN_SUCCESS:
             return CHAT_INITIAL_STATE;

@@ -36,3 +36,8 @@ export const selectUnseenMessages = createSelector(
     [selectChatReducer],
     (chatSlice) => chatSlice.unseenMessages
 );
+
+export const selectSelectedConversationOpen = createSelector(
+    [selectChatReducer],
+    (chatSlice) => chatSlice.selectedConversationOpen
+);

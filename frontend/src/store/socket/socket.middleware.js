@@ -2,6 +2,8 @@ import { createAction } from "@/utils/reducer/reducer.utils";
 import { io } from "socket.io-client";
 import SOCKET_ACTION_TYPES from "./socket.types";
 import NOTIFICATION_ACTION_TYPES from "../notification/notification.types";
+import CHAT_ACTION_TYPES from "../chat/chat.types";
+import { markAsSeenMessagesStart, recieveMessage } from "../chat/chat.action";
 
 const socketMiddleware = (store) => (next) => (action) => {
 
@@ -36,12 +38,14 @@ const socketMiddleware = (store) => (next) => (action) => {
                     store.dispatch(createAction(NOTIFICATION_ACTION_TYPES.ADD_NEW_NOTIFICATION, notification));
                 })
                 
-                newSocket.on("friendOnline", () => {
-                    
-                })
-
-                newSocket.on("friendOffline", () => {
-
+                newSocket.on("newMessage", (message) => {
+                    console.log("new message ", message);
+                    const selectedConversation = store.getState().chat.selectedConversation;
+                    const selectedConversationOpen = store.getState().chat.selectedConversationOpen;
+                    store.dispatch(recieveMessage(message));
+                    if(selectedConversation && selectedConversationOpen && selectedConversation._id == message.conversation) {
+                        store.dispatch(markAsSeenMessagesStart(message.conversation));
+                    }
                 })
             }
             break;

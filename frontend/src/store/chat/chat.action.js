@@ -81,3 +81,7 @@ export const clearSelectedConversation = () => {
 export const addMessageToSelectedConversation = (_id, sender, message) => {
     return createAction(CHAT_ACTION_TYPES.ADD_MESSAGE_TO_SELECTED_CONVERSATION, { _id, sender, message });
 }
+
+export const recieveMessage = (message) => {
+    return createAction(CHAT_ACTION_TYPES.RECIEVE_MESSAGE, message);
+}

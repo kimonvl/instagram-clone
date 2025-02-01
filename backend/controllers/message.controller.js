@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Conversation } from "../models/conversation.model.js";
 import { Message } from "../models/message.model.js";
+import { getRecieverSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
     try {
@@ -35,6 +36,14 @@ export const sendMessage = async (req, res) => {
         await conversation.save();
 
         //implement websocket for real time notification
+        // Check if the receiver is online
+        const receiverSocketId = getRecieverSocketId(newMessage.reciever.toString());
+        if (receiverSocketId) {
+            // Emit the notification directly as the populated object
+            io.to(receiverSocketId).emit("newMessage", newMessage.toObject());
+        } else {
+            console.log("Receiver is not online, message stored in DB");
+        }
 
         return res.status(200).json({
             success: true,
